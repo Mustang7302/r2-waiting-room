@@ -71,21 +71,21 @@ Want the full VIN on your dashboard? Copy `settings.example.json` to `settings.j
 
 ## What it watches
 
-The **fulfillment ladder** has nine rungs. Each is mapped to raw Rivian fields; the dashboard shows the raw value under every rung.
+The **fulfillment ladder** has nine rungs. Each is mapped to raw Rivian fields; the dashboard shows the raw value under every rung when "Show field names" is on.
 
 | Rung | Reached when |
 | --- | --- |
 | 1 Preordered | `state == ORDERED` |
-| 2 Configured | `configurationStatus` is set (SOFT_LOCKED after you lock your build) |
-| 3 In the queue | `fulfillmentSummaryStatus == PENDING_FULFILLMENT` |
-| 4 Invited to order | `invitedToSelfConfigure` or `invitedToSelfConfirm` becomes true |
+| 2 Invited to order | `invitedToSelfConfigure` or `invitedToSelfConfirm` is true, or implied by a placed order (shown as "Complete" with no date) |
+| 3 Ordered | `configurationStatus` is set (SOFT_LOCKED after you lock your build and sign the agreement) |
+| 4 In the queue | `fulfillmentSummaryStatus == PENDING_FULFILLMENT` |
 | 5 Build matched | `vehicleId` appears, or `configurationStatus` is anything other than SOFT_LOCKED, or a `plannedBuildDate` appears |
 | 6 VIN assigned | `vin` appears, or `fulfillmentSummaryStatus == READY_FOR_FULFILLMENT` |
 | 7 Purchase opens | `isPreparingPurchase` becomes true, or the Title and reg step unlocks |
 | 8 Delivery set | `delivery.status` is APPT_SCHEDULED or DELIVERY_ACCEPTED, or an appointment exists |
 | 9 Delivered | `fulfillmentSummaryStatus == VEHICLE_DELIVERED` |
 
-Rungs 4 to 7 are in the order R1 owners reported on the forums; R2 may differ, so a rung reached out of order is shown as reached, with its date, rather than forced into sequence.
+Rungs 5 to 7 follow the order R1 owners reported on the forums; R2 may differ, so a rung reached out of order is shown as reached, with its date, rather than forced into sequence.
 
 Beyond the ladder, **every leaf in every response is diffed** against the previous poll. Unknown fields that move still show up in "What moved" and in your push. A short noise list (`offersByStore`, image URLs, feature flags) is stored but not alerted; edit it in `settings.json`.
 

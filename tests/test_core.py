@@ -107,16 +107,17 @@ def test_ladder_first_poll_backfills(pending):
     assert newly == []
     by = {r["rung"]: r for r in rungs}
     assert by[1]["reached"] and by[1]["source"] == "backfill" and by[1]["reached_at"].startswith("2026-03-08")
-    assert by[2]["reached"] and by[2]["reached_at"].startswith("2026-09-22")
-    assert by[3]["reached"] and by[3]["source"] == "first_poll"
-    assert not by[4]["reached"] and not by[5]["reached"]
-    assert current_rung(rungs) == 3
+    assert by[2]["reached"] and by[2]["reached_at"] is None and by[2]["source"] == "implied"
+    assert by[3]["reached"] and by[3]["reached_at"].startswith("2026-09-22")
+    assert by[4]["reached"] and by[4]["source"] == "first_poll"
+    assert not by[5]["reached"] and not by[6]["reached"]
+    assert current_rung(rungs) == 4
 
 
 def test_ladder_advances_and_never_unreaches(pending, matched, vin):
     r0, _ = update_rungs(None, build_facts(pending), "2026-10-27T18:00:00Z", first_poll=True)
     r1, new1 = update_rungs(r0, build_facts(matched), "2026-11-20T18:00:00Z", first_poll=False)
-    assert set(new1) == {4, 5}
+    assert set(new1) == {5}
     assert current_rung(r1) == 5
     r2, new2 = update_rungs(r1, build_facts(vin), "2026-12-10T18:00:00Z", first_poll=False)
     assert set(new2) == {6, 7}
@@ -132,6 +133,23 @@ def test_rung5_fires_on_unknown_config_status(pending):
     f["configurationStatus"] = "SOMETHING_NEW"
     rungs, _ = update_rungs(None, f, "2026-10-27T18:00:00Z", first_poll=True)
     assert {r["rung"]: r["reached"] for r in rungs}[5] is True
+
+
+def test_rungs_migrate_from_old_nine_rung_file(pending, matched):
+    old = [
+        {"rung": 1, "name": "Preordered", "reached": True, "reached_at": "2026-03-08", "source": "backfill"},
+        {"rung": 2, "name": "Configured", "reached": True, "reached_at": "2026-09-22", "source": "backfill"},
+        {"rung": 3, "name": "In the queue", "reached": True, "reached_at": "2026-10-27T01:00:00Z", "source": "first_poll"},
+        {"rung": 4, "name": "Invited to order", "reached": False},
+        {"rung": 5, "name": "Build matched", "reached": False},
+    ]
+    rungs, newly = update_rungs(old, build_facts(pending), "2026-10-28T00:00:00Z", first_poll=False)
+    assert newly == [] and current_rung(rungs) == 4  # the implied invite rung never alerts
+    assert [r["name"] for r in rungs][:4] == ["Preordered", "Invited to order", "Ordered", "In the queue"]
+    assert rungs[1]["reached"] and rungs[1]["reached_at"] is None
+    assert rungs[2]["reached_at"] == "2026-09-22"
+    rungs2, newly2 = update_rungs(rungs, build_facts(matched), "2026-11-20T00:00:00Z", first_poll=False)
+    assert newly2 == [5] and rungs2[4]["name"] == "Build matched"
 
 
 # ----- sanitize -----------------------------------------------------------

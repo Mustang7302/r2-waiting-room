@@ -220,9 +220,9 @@
   // Plain-English descriptions for each rung, by state.
   const RUNG_TEXT = {
     1: { done: (r) => `Placed ${fmtD(r.reached_at)}`, todo: () => "" },
-    2: { done: (r, l) => `${human(l.configurationStatus) || "Locked"}${r.reached_at ? ` on ${fmtD(r.reached_at)}` : ""}`, todo: () => "You lock your build on rivian.com" },
-    3: { done: (r, l) => `Waiting for Rivian to match a build. Status: ${human(l.fulfillmentSummaryStatus)}`, todo: () => "After you lock your build" },
-    4: { done: (r) => `Rivian invited you to order${r.reached_at ? ` on ${fmtD(r.reached_at)}` : ""}`, todo: () => "Rivian invites you to place your order when your build slot comes up" },
+    2: { done: (r) => r.reached_at ? `Invited ${fmtD(r.reached_at)}` : "Complete", todo: () => "Rivian invites you to place your order when your slot comes up" },
+    3: { done: (r, l) => `Build locked${r.reached_at ? ` on ${fmtD(r.reached_at)}` : ""}${l.configurationStatus ? ` (${human(l.configurationStatus).toLowerCase()})` : ""}`, todo: () => "You lock your build and sign the agreement on rivian.com" },
+    4: { done: (r, l) => `Waiting for Rivian to match a build. Status: ${human(l.fulfillmentSummaryStatus)}`, todo: () => "After you place your order" },
     5: { done: (r) => `A vehicle has been assigned to your order${r.reached_at ? ` (${fmtD(r.reached_at)})` : ""}`, todo: () => "Your configuration hard-locks and a vehicle ID appears" },
     6: { done: (r, l) => `VIN ${l.vin || "assigned"}${r.reached_at ? ` · ${fmtD(r.reached_at)}` : ""}`, todo: () => "Usually close to the vehicle shipping" },
     7: { done: (r) => `Rivian opened the purchase steps${r.reached_at ? ` on ${fmtD(r.reached_at)}` : ""}`, todo: () => "Title, insurance, payment and the rest unlock" },
@@ -231,7 +231,6 @@
   };
 
   const WATCH = [
-    ["Invite to order", "invitedToSelfConfigure · invitedToSelfConfirm", (l) => (l.invitedToSelfConfigure || l.invitedToSelfConfirm) ? "Invited" : null, "Rivian invites you to place your order when your build slot comes up", "Not yet"],
     ["Configuration lock", "configurationStatus", (l) => l.configurationStatus, "Hard lock when a build is matched"],
     ["Build assignment", "vehicleId", (l) => l.vehicleId ? "Assigned" : null, "A vehicle ID appears before the VIN"],
     ["Fulfillment status", "fulfillmentSummaryStatus", (l) => l.fulfillmentSummaryStatus, "Ready for fulfillment, then ready for next steps"],
@@ -241,7 +240,7 @@
   ];
 
   const PATH_LABEL = [
-    [/configurationStatus$/, "Configuration lock"], [/fulfillmentSummaryStatus$/, "Fulfillment status"], [/invitedToSelfConfirm$/, "Invite to order"], [/invitedToSelfConfigure$/, "Invite to order"],
+    [/configurationStatus$/, "Configuration lock"], [/fulfillmentSummaryStatus$/, "Fulfillment status"], [/invitedToSelfConfirm$|invitedToSelfConfigure$/, "Rivian invite flag"],
     [/vehicleId$/, "Build assignment"], [/\.vin$|vehicleVIN$/, "VIN"], [/isPreparingPurchase$/, "Purchase phase"], [/delivery\.status$/, "Delivery"],
     [/appointmentDetails\./, "Delivery appointment"], [/plannedBuildDate$/, "Planned build date"], [/expectedBuildDate$/, "Expected build date"],
     [/actualGeneralAssemblyDate$/, "Assembly date"], [/steps\.([A-Za-z]+)\.locked$/, (m) => `${m[1]} step lock`], [/steps\.([A-Za-z]+)\.completed$/, (m) => `${m[1]} step completed`],
@@ -287,11 +286,11 @@
     const reachedRungs = rungs.filter(r => r.reached).map(r => r.rung);
     const stage = reachedRungs.length ? Math.max(...reachedRungs) : 0;
     const NEXT = {
-      0: ["Lock your build", "Configure and lock your R2 on rivian.com to enter the queue.", "configurationStatus"],
-      1: ["Lock your build", "Configure and lock your R2 on rivian.com to enter the queue.", "configurationStatus"],
-      2: ["Invite and production signals", "Your invite to order, then a hard lock on your configuration, a vehicle ID, a planned build date, or the fulfillment status moving off Pending. Any of these means Rivian is starting on your R2.", "invitedToSelfConfigure · configurationStatus · vehicleId · plannedBuildDate · fulfillmentSummaryStatus"],
-      3: ["Invite and production signals", "Your invite to order, then a hard lock on your configuration, a vehicle ID, a planned build date, or the fulfillment status moving off Pending. Any of these means Rivian is starting on your R2.", "invitedToSelfConfigure · configurationStatus · vehicleId · plannedBuildDate · fulfillmentSummaryStatus"],
-      4: ["Production signals", "A hard lock on your configuration, a vehicle ID, or a planned build date. You have your invite; Rivian is matching a build.", "configurationStatus · vehicleId · plannedBuildDate"],
+      0: ["Your invite to order", "Rivian invites preorder holders to place their order in reservation sequence.", "invitedToSelfConfigure"],
+      1: ["Your invite to order", "Rivian invites preorder holders to place their order in reservation sequence.", "invitedToSelfConfigure"],
+      2: ["Placing your order", "Configure and lock your R2 on rivian.com to enter the queue.", "configurationStatus"],
+      3: ["Production signals", "A hard lock on your configuration, a vehicle ID, a planned build date, or the fulfillment status moving off Pending. Any of these means Rivian is starting on your R2.", "configurationStatus · vehicleId · plannedBuildDate · fulfillmentSummaryStatus"],
+      4: ["Production signals", "A hard lock on your configuration, a vehicle ID, a planned build date, or the fulfillment status moving off Pending. Any of these means Rivian is starting on your R2.", "configurationStatus · vehicleId · plannedBuildDate · fulfillmentSummaryStatus"],
       5: ["VIN and build dates", "A VIN, an assembly date, and the fulfillment status reaching Ready for fulfillment.", "vin · actualGeneralAssemblyDate · fulfillmentSummaryStatus"],
       6: ["Purchase steps opening", "Rivian unlocks title, insurance, payment and the rest once the vehicle is on its way.", "isPreparingPurchase · steps.titleAndReg.locked"],
       7: ["Delivery scheduling", "A delivery record and an appointment window.", "delivery.status · appointmentDetails"],
@@ -317,9 +316,9 @@
     // Ladder
     $("ladderCount").textContent = `${reached} of ${rungs.length}`;
     $("ladder").innerHTML = rungs.map(r => {
-      const isHere = r.rung === here && here < 9;
+      const isHere = r.rung === here && here < rungs.length;
       const cls = r.reached ? (isHere ? "here" : "done") : "todo";
-      const when = r.reached ? (isHere ? "You are here" : fmtD(r.reached_at)) : "";
+      const when = r.reached ? (isHere ? "You are here" : (r.reached_at ? fmtD(r.reached_at) : "Complete")) : "";
       const t = RUNG_TEXT[r.rung] || {};
       const desc = r.reached ? (t.done ? t.done(r, latest) : "") : (t.todo ? t.todo() : "");
       const check = cls === "done" ? `<svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="#F4F0E8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3 3 7-7"/></svg>` : "";

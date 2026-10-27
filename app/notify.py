@@ -56,5 +56,5 @@ def format_changes(public_changes: list[dict], rung_now: int, newly: list[int], 
         lines.append(f"{c['path']}: {c['old']} → {c['new']}")
     if len(public_changes) > 5:
         lines.append(f"+{len(public_changes) - 5} more")
-    lines.append(f"Rung {rung_now} of 9")
+    lines.append(f"Rung {rung_now} of {len(rung_names)}")
     return headline, "\n".join(lines), priority

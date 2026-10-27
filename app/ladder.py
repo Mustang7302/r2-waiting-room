@@ -11,9 +11,9 @@ from typing import Any, Callable
 
 RUNG_NAMES = {
     1: "Preordered",
-    2: "Configured",
-    3: "In the queue",
-    4: "Invited to order",
+    2: "Invited to order",
+    3: "Ordered",
+    4: "In the queue",
     5: "Build matched",
     6: "VIN assigned",
     7: "Purchase opens",
@@ -23,15 +23,21 @@ RUNG_NAMES = {
 
 RUNG_FIELDS = {
     1: "state",
-    2: "configurationStatus",
-    3: "fulfillmentSummaryStatus",
-    4: "invitedToSelfConfigure / invitedToSelfConfirm",
+    2: "invitedToSelfConfigure / invitedToSelfConfirm (implied by an order)",
+    3: "configurationStatus",
+    4: "fulfillmentSummaryStatus",
     5: "vehicleId / configurationStatus",
     6: "vin / fulfillmentSummaryStatus",
     7: "isPreparingPurchase / steps.titleAndReg.locked",
     8: "delivery.status",
     9: "fulfillmentSummaryStatus",
 }
+
+# Names from earlier versions of rungs.json, so an upgrade never re-alerts or renumbers wrongly.
+OLD_NAMES = {"Configured": "Ordered", "Confirm invite": None, "Reconfirm request": None}
+
+# Rungs that are inferred rather than observed: reached without a date ("Complete") and never alerted on their own.
+DATELESS = {2}
 
 
 def _truthy(v: Any) -> bool:
@@ -54,14 +60,13 @@ class Rule:
 RULES: list[Rule] = [
     Rule(1, lambda f: f.get("state") == "ORDERED" or _truthy(f.get("orderDate")),
          lambda f: f.get("orderDate"), lambda f: f.get("state")),
-    Rule(2, lambda f: _truthy(f.get("configurationStatus")),
-         lambda f: f.get("configurationDate") or f.get("agreementSignedAt"), lambda f: f.get("configurationStatus")),
-    Rule(3, lambda f: f.get("fulfillmentSummaryStatus") == "PENDING_FULFILLMENT",
-         lambda f: None, lambda f: f.get("fulfillmentSummaryStatus")),
-    Rule(4, lambda f: _truthy(f.get("invitedToSelfConfigure")) or _truthy(f.get("invitedToSelfConfirm")),
+    Rule(2, lambda f: _truthy(f.get("invitedToSelfConfigure")) or _truthy(f.get("invitedToSelfConfirm")) or _truthy(f.get("configurationStatus")),
          lambda f: None,
-         lambda f: ("invitedToSelfConfigure" if _truthy(f.get("invitedToSelfConfigure")) else "invitedToSelfConfirm")
-         if (_truthy(f.get("invitedToSelfConfigure")) or _truthy(f.get("invitedToSelfConfirm"))) else None),
+         lambda f: "invited" if (_truthy(f.get("invitedToSelfConfigure")) or _truthy(f.get("invitedToSelfConfirm"))) else "implied by order"),
+    Rule(3, lambda f: _truthy(f.get("configurationStatus")),
+         lambda f: f.get("configurationDate") or f.get("agreementSignedAt"), lambda f: f.get("configurationStatus")),
+    Rule(4, lambda f: f.get("fulfillmentSummaryStatus") == "PENDING_FULFILLMENT",
+         lambda f: None, lambda f: f.get("fulfillmentSummaryStatus")),
     Rule(5, lambda f: _truthy(f.get("vehicleId"))
          or (_truthy(f.get("configurationStatus")) and f.get("configurationStatus") != "SOFT_LOCKED")
          or _truthy((f.get("buildDates") or {}).get("plannedBuildDate")),
@@ -83,7 +88,11 @@ RULES: list[Rule] = [
 
 def update_rungs(previous: list[dict] | None, facts: dict, now_iso: str, first_poll: bool) -> tuple[list[dict], list[int]]:
     """Merge the previous rungs.json with this poll's facts. Returns (rungs, newly_reached)."""
-    prev = {r["rung"]: r for r in (previous or [])}
+    prev: dict[str, dict] = {}
+    for r in previous or []:
+        name = OLD_NAMES.get(r.get("name"), r.get("name"))
+        if name:
+            prev[name] = r
     out: list[dict] = []
     newly: list[int] = []
     for rule in RULES:
@@ -96,13 +105,15 @@ def update_rungs(previous: list[dict] | None, facts: dict, now_iso: str, first_p
             "source": None,
             "value": None,
         }
-        was = prev.get(rule.rung)
+        was = prev.get(RUNG_NAMES[rule.rung])
         if was and was.get("reached"):
             entry.update({k: was.get(k) for k in ("reached", "reached_at", "source")})
             entry["value"] = rule.value(facts) if rule.test(facts) else was.get("value")
         elif rule.test(facts):
             back = rule.backfill(facts)
-            if first_poll and back:
+            if rule.rung in DATELESS and not back:
+                entry.update(reached=True, reached_at=None, source="implied")
+            elif first_poll and back:
                 entry.update(reached=True, reached_at=back, source="backfill")
             elif first_poll:
                 entry.update(reached=True, reached_at=now_iso, source="first_poll")

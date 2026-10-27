@@ -39,7 +39,7 @@ def test_1_mock_boot_shows_rung_3(repo):
     root, poller = repo
     assert poller.run(mock=True, fixture="order.pending_fulfillment", notify=False) == 0
     meta, rungs, latest, changes = _read(root, "meta.json"), _read(root, "rungs.json"), _read(root, "latest.json"), _read(root, "changes.json")
-    assert meta["rung"] == 3 and meta["mode"] == "mock" and meta["ok"]
+    assert meta["rung"] == 4 and meta["mode"] == "mock" and meta["ok"]
     assert latest["fulfillmentSummaryStatus"] == "PENDING_FULFILLMENT"
     assert changes == []  # first poll writes no change rows
     assert meta["fields_watched"] > 100
