@@ -179,3 +179,19 @@ def test_fixture_files_are_redacted():
         text = p.read_text(encoding="utf-8")
         for bad in FORBIDDEN_VALUES:
             assert bad not in text, f"{p.name} contains {bad}"
+
+
+# ----- adaptive queries ---------------------------------------------------
+
+def test_rejected_fields_are_stripped_and_rest_kept():
+    from app.rivian import queries as Q
+
+    err = ('order: Cannot query field "garageLeaseStatus" on type "Order".; '
+           'Cannot query field "consumerStatuses" on type "Order".')
+    rej = Q.rejected_fields(err)
+    assert rej == {"garageLeaseStatus", "consumerStatuses"}
+    q = Q.strip_fields(Q.ORDER_EXT["query"], rej)
+    assert "garageLeaseStatus" not in q and "consumerStatuses" not in q and "isPreparingPurchase" not in q
+    for keep in ("vehicleId", "configurationStatus", "invitedToSelfConfirm", "payments {", "options {"):
+        assert keep in q
+    assert q.count("{") == q.count("}")

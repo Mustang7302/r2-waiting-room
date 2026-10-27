@@ -105,6 +105,43 @@ ORDER_EXT = {
     "query": f"query order($id: String!) {{ order(id: $id) {{ {_ORDER_EXT_FIELDS} }} }}",
 }
 
+_REJECTED_RE = None
+
+
+def rejected_fields(error_text: str) -> set[str]:
+    """Field names from GraphQL validation errors like: Cannot query field "garageLeaseStatus" on type "Order"."""
+    import re
+
+    return set(re.findall(r'Cannot query field "([A-Za-z0-9_]+)"', error_text))
+
+
+def strip_fields(query: str, names: set[str]) -> str:
+    """Remove `name` or `name { ... }` selections (balanced braces) from a GraphQL document."""
+    import re
+
+    out = query
+    for name in names:
+        # name followed by a selection set
+        pattern = re.compile(r"(?<![A-Za-z0-9_])" + re.escape(name) + r"\s*\{")
+        while True:
+            m = pattern.search(out)
+            if not m:
+                break
+            depth, i = 0, m.end() - 1
+            while i < len(out):
+                if out[i] == "{":
+                    depth += 1
+                elif out[i] == "}":
+                    depth -= 1
+                    if depth == 0:
+                        break
+                i += 1
+            out = out[: m.start()] + out[i + 1 :]
+        # bare name (not followed by '(' or '{', not part of a longer identifier, not a keyword position)
+        out = re.sub(r"(?<![A-Za-z0-9_$])" + re.escape(name) + r"(?![A-Za-z0-9_])(?!\s*[({:])", " ", out)
+    return re.sub(r"\s+", " ", out).strip()
+
+
 USER_INFO = {
     "operationName": "getUserInfo",
     "query": (

@@ -9,102 +9,109 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
 <style>
   :root {
-    --forest: #1C3329; --moss: #2E5241; --limestone: #F4F0E8; --sand: #E9E2D3; --granite: #5B655F;
-    --ink: #16221C; --yellow: #F2B632; --yellow-soft: #FBEBC4; --yellow-ink: #6B4A10; --trail: #3E7D5A;
-    --ochre: #A1651F; --mute: #8A938D; --red: #B4432E; --card: #FFFFFF; --on-forest: #BFCBC2;
+    --forest: #1C3329; --page: #F4F0E8; --sand: #E9E2D3; --granite: #5B655F; --ink: #16221C;
+    --yellow: #F2B632; --yellow-soft: #FBEBC4; --yellow-ink: #6B4A10; --trail: #3E7D5A; --trail-soft: #E3EFE6;
+    --ochre: #A1651F; --mute: #8A938D; --card: #FFFFFF; --red: #B4432E; --red-soft: #F8E4DF;
+    --hero-text: #F4F0E8; --hero-muted: #BFCBC2; --hero-rule: rgba(244,240,232,.18);
     --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --shadow: 0 1px 2px rgba(22,34,28,.04), 0 8px 24px -16px rgba(22,34,28,.18);
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --limestone: #121C17; --sand: #26352D; --card: #1A2620; --ink: #EEEAE0; --granite: #A9B3AC; --mute: #7E8882;
-      --trail: #7CC79A; --ochre: #E0A84F; --yellow-soft: #3D3416; --yellow-ink: #F2C66D;
+      --page: #111A15; --sand: #263229; --card: #192420; --ink: #EEEAE0; --granite: #A9B3AC; --mute: #7E8882;
+      --trail: #7CC79A; --trail-soft: #1E3328; --ochre: #E0A84F; --yellow-soft: #3A3116; --yellow-ink: #F2C66D;
+      --red-soft: #3A1F1A; --shadow: none;
     }
   }
   * { box-sizing: border-box; }
   [hidden] { display: none !important; }
-  html, body { margin: 0; background: var(--limestone); color: var(--ink); font-family: Manrope, system-ui, sans-serif; }
+  html, body { margin: 0; background: var(--page); color: var(--ink); font-family: Manrope, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
   a { color: inherit; }
   .wrap { max-width: 1120px; margin: 0 auto; }
-  .hero { position: relative; overflow: hidden; background: var(--forest); color: var(--limestone); padding: 28px 20px 24px; }
-  .hero svg.topo { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .16; }
-  .hero .inner { position: relative; display: flex; flex-direction: column; gap: 16px; }
-  .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--on-forest); }
-  .pill { display: inline-flex; align-items: center; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; background: var(--yellow); color: #16221C; padding: 6px 10px; border-radius: 999px; white-space: nowrap; }
-  .pill.red { background: var(--red); color: #fff; }
-  .pill.muted { background: rgba(244,240,232,.18); color: var(--limestone); }
-  h1 { margin: 0; font-size: 34px; line-height: 1.05; font-weight: 800; letter-spacing: -.02em; }
-  .sub { margin: 0; font-size: 14px; color: var(--on-forest); }
-  .window { display: flex; flex-direction: column; gap: 6px; padding-top: 10px; border-top: 1px solid rgba(244,240,232,.18); }
+  .hero { position: relative; overflow: hidden; background: var(--forest); color: var(--hero-text); padding: 28px 20px 26px; }
+  .hero svg.topo { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .14; }
+  .hero .inner { position: relative; display: flex; flex-direction: column; gap: 18px; }
+  .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--hero-muted); }
+  .pill { display: inline-flex; align-items: center; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; background: var(--yellow); color: #16221C; padding: 7px 12px; border-radius: 999px; white-space: nowrap; }
+  .pill.muted { background: var(--hero-rule); color: var(--hero-text); }
+  h1 { margin: 2px 0 0; font-size: 36px; line-height: 1.05; font-weight: 800; letter-spacing: -.02em; color: var(--hero-text); }
+  .sub { margin: 6px 0 0; font-size: 14px; color: var(--hero-muted); line-height: 1.45; }
+  .window { display: flex; flex-direction: column; gap: 6px; padding-top: 14px; border-top: 1px solid var(--hero-rule); }
   .window .big { font-size: 24px; font-weight: 800; letter-spacing: -.01em; }
-  .window .note { font-size: 12px; color: var(--on-forest); }
+  .window .note { font-size: 12px; color: var(--hero-muted); }
   .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
   .brand { display: flex; align-items: center; gap: 10px; }
   .brand .mark { width: 28px; height: 28px; border-radius: 8px; background: var(--yellow); display: inline-flex; align-items: center; justify-content: center; }
-  .brand span { font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
-  main { padding: 20px 16px 32px; display: grid; gap: 16px; grid-template-columns: 1fr; }
-  .card { background: var(--card); border: 1px solid var(--sand); border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
-  .card h2 { margin: 0; font-size: 16px; font-weight: 800; letter-spacing: -.01em; }
+  .brand span { font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--hero-text); }
+  main { padding: 20px 16px 36px; display: grid; gap: 16px; grid-template-columns: 1fr; }
+  .card { background: var(--card); border: 1px solid var(--sand); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 14px; min-width: 0; box-shadow: var(--shadow); }
+  .card h2 { margin: 0; font-size: 17px; font-weight: 800; letter-spacing: -.01em; }
   .card .head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
-  .label { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--granite); }
-  .callout { border-left: 4px solid var(--yellow); gap: 4px; padding: 14px 16px; border-radius: 14px; }
-  .callout .what { font-size: 14px; font-weight: 700; }
-  .callout .fields { font-size: 12px; color: var(--granite); font-family: var(--mono); }
-  .banner { border-radius: 14px; padding: 14px 16px; font-size: 13px; line-height: 1.45; }
-  .banner.red { background: var(--red); color: #fff; }
+  .label { font-size: 10.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--granite); }
+  .hint { font-size: 12px; color: var(--granite); line-height: 1.5; }
+  .callout { border-left: 4px solid var(--yellow); gap: 4px; padding: 16px 18px; }
+  .callout .what { font-size: 16px; font-weight: 800; letter-spacing: -.01em; }
+  .callout .why { font-size: 13px; color: var(--granite); line-height: 1.45; }
+  .banner { border-radius: 16px; padding: 14px 18px; font-size: 13.5px; line-height: 1.5; display: flex; gap: 12px; align-items: flex-start; }
+  .banner.red { background: var(--red-soft); color: var(--ink); border: 1px solid var(--red); }
   .banner.sand { background: var(--yellow-soft); color: var(--yellow-ink); }
-  .banner a { color: inherit; font-weight: 700; }
+  .banner a { font-weight: 700; }
+  .banner + .banner { margin-top: 10px; }
   .ladder { position: relative; display: flex; flex-direction: column; }
-  .ladder::before { content: ""; position: absolute; left: 11px; top: 14px; bottom: 28px; width: 2px; background: var(--sand); }
-  .rung { position: relative; display: flex; gap: 14px; padding: 6px 0 12px; }
-  .dot { width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; background: var(--limestone); border: 2px solid var(--sand); }
+  .ladder::before { content: ""; position: absolute; left: 13px; top: 16px; bottom: 30px; width: 2px; background: var(--sand); }
+  .rung { position: relative; display: flex; gap: 16px; padding: 8px 0 14px; }
+  .dot { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; background: var(--page); border: 2px solid var(--sand); }
   .rung.done .dot { background: var(--forest); border-color: var(--forest); }
   .rung.here .dot { background: var(--card); border: 3px solid var(--yellow); }
-  .rung.here .dot::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--yellow); }
-  .rung .body { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
-  .rung .name { font-size: 14px; font-weight: 700; }
+  .rung.here .dot::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--yellow); }
+  .rung .body { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; padding-top: 3px; }
+  .rung .name { font-size: 15px; font-weight: 700; }
   .rung.todo .name { font-weight: 600; color: var(--granite); }
-  .rung .when { font-size: 11px; color: var(--granite); }
-  .rung.here .when { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ochre); }
-  .rung .raw { font-size: 11px; font-family: var(--mono); color: var(--mute); word-break: break-word; }
-  .rung.done .raw { color: var(--trail); }
-  .rung.here .raw { color: var(--ochre); }
+  .rung .when { font-size: 12px; color: var(--granite); white-space: nowrap; }
+  .rung.here .when { font-size: 10.5px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ochre); }
+  .rung .desc { font-size: 13px; color: var(--granite); line-height: 1.4; }
+  .rung.here .desc { color: var(--ink); }
+  .raw { display: none; font-size: 11px; font-family: var(--mono); color: var(--mute); word-break: break-word; }
+  body.show-raw .raw { display: block; }
   .feed { display: flex; flex-direction: column; }
-  .feed .item { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--sand); }
+  .feed .item { display: flex; gap: 14px; padding: 10px 0; border-bottom: 1px solid var(--sand); }
   .feed .item:last-child { border-bottom: 0; }
-  .feed .d { width: 56px; flex-shrink: 0; font-size: 12px; color: var(--granite); }
-  .feed .t { display: flex; flex-direction: column; gap: 2px; min-width: 0; font-size: 13px; }
-  .feed .m { font-size: 11px; color: var(--granite); font-family: var(--mono); word-break: break-all; }
-  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-  .chip { font-size: 11px; font-weight: 600; padding: 6px 10px; border-radius: 999px; background: var(--limestone); color: var(--granite); border: 1px solid var(--sand); }
+  .feed .d { width: 54px; flex-shrink: 0; font-size: 12px; color: var(--granite); padding-top: 2px; }
+  .feed .t { display: flex; flex-direction: column; gap: 2px; min-width: 0; font-size: 14px; }
+  .feed .m { font-size: 12px; color: var(--granite); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { font-size: 12px; font-weight: 600; padding: 7px 12px; border-radius: 999px; background: var(--page); color: var(--granite); border: 1px solid var(--sand); }
   .chip.open { background: var(--yellow-soft); color: var(--yellow-ink); border-color: transparent; font-weight: 700; }
-  .chip.done { background: var(--forest); color: var(--limestone); border-color: transparent; font-weight: 700; }
-  .tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
-  .tile { background: var(--card); border: 1px solid var(--sand); border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-  .tile .v { font-size: 14px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .tile .s { font-size: 11px; color: var(--granite); }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  th { text-align: left; padding: 6px 0; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--granite); border-bottom: 1px solid var(--sand); font-weight: 700; }
-  td { padding: 9px 0; border-bottom: 1px solid var(--sand); vertical-align: top; }
-  tr:last-child td { border-bottom: 0; }
-  td.mono { font-family: var(--mono); font-size: 12px; overflow-wrap: anywhere; }
-  td .exp { display: none; font-family: Manrope, system-ui, sans-serif; font-size: 11px; color: var(--granite); margin-top: 2px; }
-  @media (max-width: 899px) { th.expcol, td.expcol { display: none; } td .exp { display: block; } }
-  td.r { text-align: right; color: var(--granite); white-space: nowrap; }
-  .tablewrap { overflow-x: auto; }
-  footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 4px 4px 0; flex-wrap: wrap; }
-  footer .st { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--granite); }
+  .chip.done { background: var(--trail-soft); color: var(--trail); border-color: transparent; font-weight: 700; }
+  .tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .tile { background: var(--card); border: 1px solid var(--sand); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px; min-width: 0; box-shadow: var(--shadow); }
+  .tile .v { font-size: 15px; font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tile .s { font-size: 12px; color: var(--granite); }
+  .watch { display: flex; flex-direction: column; }
+  .watch .wrow { display: grid; grid-template-columns: 1.1fr 1fr; gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--sand); align-items: start; }
+  .watch .wrow:last-child { border-bottom: 0; }
+  .watch .wf { font-size: 14px; font-weight: 700; }
+  .watch .wn { font-size: 14px; }
+  .watch .wn.on { color: var(--trail); font-weight: 700; }
+  .watch .wn.off { color: var(--mute); }
+  .watch .we { font-size: 12px; color: var(--granite); margin-top: 2px; }
+  footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 6px 4px 0; flex-wrap: wrap; }
+  footer .st { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--granite); }
   footer .st i { width: 8px; height: 8px; border-radius: 50%; background: var(--trail); display: inline-block; }
   footer .st i.bad { background: var(--red); }
-  .btn { font: inherit; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; background: var(--forest); color: var(--limestone); border: 0; border-radius: 999px; padding: 12px 16px; min-height: 44px; text-decoration: none; display: inline-flex; align-items: center; }
-  .links { font-size: 11px; color: var(--granite); }
-  .links a { margin-right: 10px; }
-  .empty { padding: 28px 18px; text-align: center; color: var(--granite); font-size: 14px; line-height: 1.5; }
+  .btn { font: inherit; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; background: var(--forest); color: #F4F0E8; border: 0; border-radius: 999px; padding: 12px 18px; min-height: 44px; text-decoration: none; display: inline-flex; align-items: center; cursor: pointer; }
+  .btn.ghost { background: transparent; color: var(--granite); border: 1px solid var(--sand); }
+  .links { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .empty { padding: 36px 20px; text-align: center; color: var(--granite); font-size: 15px; line-height: 1.6; }
+  .kv { display: grid; grid-template-columns: 1fr auto; gap: 8px 16px; font-size: 14px; }
+  .kv .k { color: var(--granite); }
   @media (min-width: 900px) {
-    .hero { padding: 36px 32px 28px; }
-    main { grid-template-columns: 3fr 2fr; padding: 24px 32px 40px; }
+    .hero { padding: 36px 32px 30px; }
+    main { grid-template-columns: 3fr 2fr; padding: 24px 32px 44px; }
     .span2 { grid-column: 1 / -1; }
     .col-a { grid-column: 1; }
     .col-b { grid-column: 2; }
+    h1 { font-size: 40px; }
   }
 </style>
 </head>
@@ -129,7 +136,7 @@
       <p class="sub" id="subtitle">&nbsp;</p>
     </div>
     <div class="window" id="window" hidden>
-      <span class="eyebrow">Rivian's window</span>
+      <span class="eyebrow">Rivian's estimate</span>
       <span class="big" id="windowText"></span>
       <span class="note" id="windowNote"></span>
     </div>
@@ -138,7 +145,7 @@
 
 <main class="wrap" id="main">
   <div class="span2" id="banners"></div>
-  <div class="span2 empty" id="empty" hidden>No data yet. Run the <a id="emptyLink" href="#">Poll Rivian</a> workflow (or run it with the sample order ticked to preview the dashboard), then reload.</div>
+  <div class="span2 card empty" id="empty" hidden>Nothing here yet. Run the <a id="emptyLink" href="#">Poll Rivian</a> workflow (tick "use the sample order" to preview), then reload.</div>
 
   <div class="col-a" id="colA" style="display:flex;flex-direction:column;gap:16px" hidden>
     <div class="card callout" id="next"></div>
@@ -150,7 +157,7 @@
     <div class="card">
       <div class="head"><h2>Purchase steps</h2><span class="label" id="stepsCount"></span></div>
       <div class="chips" id="steps"></div>
-      <span class="s" style="font-size:11px;color:var(--granite)">Locked steps unlock when Rivian moves the order. The first to watch is Title and reg.</span>
+      <span class="hint" id="stepsHint"></span>
     </div>
   </div>
 
@@ -160,19 +167,21 @@
       <div class="feed" id="feed"></div>
     </div>
     <div class="card">
-      <div class="head"><h2>Watch list</h2><span class="label">Alert on any change</span></div>
-      <div class="tablewrap"><table><thead><tr><th>Field</th><th>Now</th><th class="expcol">Expected next</th></tr></thead><tbody id="watch"></tbody></table></div>
+      <div class="head"><h2>Watch list</h2><span class="label">Alerts on any change</span></div>
+      <div class="watch" id="watch"></div>
     </div>
     <div class="card" id="buildCard" hidden>
       <div class="head"><h2>Build dates</h2><span class="label">From Rivian's vehicle record</span></div>
-      <div class="tablewrap"><table><tbody id="buildDates"></tbody></table></div>
+      <div class="kv" id="buildDates"></div>
     </div>
   </div>
 
   <footer class="span2" id="footer" hidden>
     <div class="st"><i id="dotStatus"></i><span id="pollLine"></span></div>
-    <div class="links"><a id="rawLink" href="data/latest.json">latest.json</a><a href="data/changes.json">changes.json</a><a href="data/rungs.json">rungs.json</a><a href="data/meta.json">meta.json</a></div>
-    <a class="btn" id="pollBtn" href="#" target="_blank" rel="noopener">Poll now</a>
+    <div class="links">
+      <button type="button" class="btn ghost" id="rawToggle">Show field names</button>
+      <a class="btn" id="pollBtn" href="#" target="_blank" rel="noopener">Poll now</a>
+    </div>
   </footer>
 </main>
 
@@ -185,36 +194,76 @@
     if (host.endsWith(".github.io") && seg) return { owner: host.replace(".github.io", ""), name: seg };
     return null;
   })();
-  const actionsUrl = repo ? `https://github.com/${repo.owner}/${repo.name}/actions/workflows/poll.yml` : "#";
-  $("pollBtn").href = actionsUrl; $("emptyLink").href = actionsUrl;
+  const wf = (f) => repo ? `https://github.com/${repo.owner}/${repo.name}/actions/workflows/${f}` : "#";
+  $("pollBtn").href = wf("poll.yml"); $("emptyLink").href = wf("poll.yml");
 
-  const HUMAN = { PENDING_FULFILLMENT: "Pending fulfillment", READY_FOR_FULFILLMENT: "Ready for fulfillment", READY_FOR_NEXT_STEPS: "Ready for next steps", VEHICLE_DELIVERED: "Delivered", SOFT_LOCKED: "Soft locked", HARD_LOCKED: "Hard locked", ORDERED: "Ordered" };
-  const human = (s) => s == null ? "" : (HUMAN[s] || String(s).toLowerCase().replace(/_/g, " ").replace(/^\w/, c => c.toUpperCase()));
+  // Raw field names are opt-in; remembered per browser.
+  try { if (localStorage.getItem("r2wr-raw") === "1") document.body.classList.add("show-raw"); } catch {}
+  $("rawToggle").addEventListener("click", () => {
+    const on = document.body.classList.toggle("show-raw");
+    $("rawToggle").textContent = on ? "Hide field names" : "Show field names";
+    try { localStorage.setItem("r2wr-raw", on ? "1" : "0"); } catch {}
+  });
+  if (document.body.classList.contains("show-raw")) $("rawToggle").textContent = "Hide field names";
+
+  const HUMAN = { PENDING_FULFILLMENT: "Pending fulfillment", READY_FOR_FULFILLMENT: "Ready for fulfillment", READY_FOR_NEXT_STEPS: "Ready for next steps", VEHICLE_DELIVERED: "Delivered", SOFT_LOCKED: "Soft locked", HARD_LOCKED: "Hard locked", ORDERED: "Ordered", INIT: "Started", APPT_SCHEDULED: "Appointment scheduled", DELIVERY_ACCEPTED: "Delivery accepted" };
+  const human = (s) => s == null || s === "" ? "" : (HUMAN[s] || String(s).toLowerCase().replace(/_/g, " ").replace(/^\w/, c => c.toUpperCase()));
   const fmtD = (iso) => { if (!iso) return ""; const d = new Date(iso); if (isNaN(d)) return String(iso); return d.toLocaleDateString(undefined, { month: "short", day: "numeric" }); };
   const fmtDT = (iso) => { if (!iso) return ""; const d = new Date(iso); if (isNaN(d)) return String(iso); return d.toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }); };
   const days = (iso) => iso ? Math.floor((Date.now() - new Date(iso)) / 864e5) : null;
   const mono = (v) => v === null || v === undefined ? "null" : (typeof v === "object" ? JSON.stringify(v) : String(v));
   const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const friendlyVal = (v) => v === null || v === undefined || v === "" ? "Not yet" : v === true ? "Yes" : v === false ? "No" : human(v);
 
   async function load(name) { try { const r = await fetch(`data/${name}${bust}`, { cache: "no-store" }); if (!r.ok) return null; return await r.json(); } catch { return null; } }
 
-  const EXPECT = {
-    invitedToSelfConfirm: "true, with email",
-    configurationStatus: "hard lock (value unknown)",
-    vehicleId: "set, before VIN",
-    fulfillmentSummaryStatus: "READY_FOR_FULFILLMENT",
-    vin: "VIN near shipment",
-    isPreparingPurchase: "true; Title and reg unlocks",
-    "delivery.status": "INIT, then APPT_SCHEDULED",
-    windowText: "any change",
+  // Plain-English descriptions for each rung, by state.
+  const RUNG_TEXT = {
+    1: { done: (r) => `Placed ${fmtD(r.reached_at)}`, todo: () => "" },
+    2: { done: (r, l) => `${human(l.configurationStatus) || "Locked"}${r.reached_at ? ` on ${fmtD(r.reached_at)}` : ""}`, todo: () => "You lock your build on rivian.com" },
+    3: { done: (r, l) => `Waiting for Rivian to match a build. Status: ${human(l.fulfillmentSummaryStatus)}`, todo: () => "After you lock your build" },
+    4: { done: (r) => `Rivian asked you to confirm your configuration${r.reached_at ? ` on ${fmtD(r.reached_at)}` : ""}`, todo: () => "Rivian emails you to confirm your build before assigning one" },
+    5: { done: (r) => `A vehicle has been assigned to your order${r.reached_at ? ` (${fmtD(r.reached_at)})` : ""}`, todo: () => "Your configuration hard-locks and a vehicle ID appears" },
+    6: { done: (r, l) => `VIN ${l.vin || "assigned"}${r.reached_at ? ` · ${fmtD(r.reached_at)}` : ""}`, todo: () => "Usually close to the vehicle shipping" },
+    7: { done: (r) => `Rivian opened the purchase steps${r.reached_at ? ` on ${fmtD(r.reached_at)}` : ""}`, todo: () => "Title, insurance, payment and the rest unlock" },
+    8: { done: (r, l) => l.delivery && l.delivery.appointmentStart ? `Appointment ${fmtDT(l.delivery.appointmentStart)}` : "Delivery scheduled", todo: () => "You pick a delivery date" },
+    9: { done: (r) => `Delivered${r.reached_at ? ` ${fmtD(r.reached_at)}` : ""}. Enjoy the R2.`, todo: () => "" },
+  };
+
+  const WATCH = [
+    ["Confirmation invite", "invitedToSelfConfirm", (l) => l.invitedToSelfConfirm, "Rivian asks you to confirm your build"],
+    ["Configuration lock", "configurationStatus", (l) => l.configurationStatus, "Hard lock when a build is matched"],
+    ["Build assignment", "vehicleId", (l) => l.vehicleId ? "Assigned" : null, "A vehicle ID appears before the VIN"],
+    ["Fulfillment status", "fulfillmentSummaryStatus", (l) => l.fulfillmentSummaryStatus, "Ready for fulfillment, then ready for next steps"],
+    ["VIN", "vin", (l) => l.vin, "Appears close to shipping"],
+    ["Purchase phase", "isPreparingPurchase", (l) => l.isPreparingPurchase, "Opens when Rivian starts the paperwork"],
+    ["Delivery", "delivery.status", (l) => l.delivery && l.delivery.status, "Started, then an appointment"],
+  ];
+
+  const PATH_LABEL = [
+    [/configurationStatus$/, "Configuration lock"], [/fulfillmentSummaryStatus$/, "Fulfillment status"], [/invitedToSelfConfirm$/, "Confirmation invite"],
+    [/vehicleId$/, "Build assignment"], [/\.vin$|vehicleVIN$/, "VIN"], [/isPreparingPurchase$/, "Purchase phase"], [/delivery\.status$/, "Delivery"],
+    [/appointmentDetails\./, "Delivery appointment"], [/plannedBuildDate$/, "Planned build date"], [/expectedBuildDate$/, "Expected build date"],
+    [/actualGeneralAssemblyDate$/, "Assembly date"], [/steps\.([A-Za-z]+)\.locked$/, (m) => `${m[1]} step lock`], [/steps\.([A-Za-z]+)\.completed$/, (m) => `${m[1]} step completed`],
+    [/\.([A-Za-z]+)\.status$/, (m) => `${m[1]} status`],
+  ];
+  const pathLabel = (p) => { for (const [re, lab] of PATH_LABEL) { const m = p.match(re); if (m) return typeof lab === "function" ? lab(m) : lab; } const last = p.split(".").pop().replace(/\[.*?\]/g, ""); return last.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/^\w/, c => c.toUpperCase()); };
+
+  const ERROR_TEXT = (k, v) => {
+    if (k === "transactionStatus") return `Rivian's purchase-steps service didn't answer (${/HTTP \d+/.exec(v) ? /HTTP \d+/.exec(v)[0] : "error"}). Everything else updated; it retries next poll.`;
+    if (k === "order") return "Rivian's order service didn't answer. It retries next poll.";
+    if (k === "delivery") return "Rivian's delivery service didn't answer. It retries next poll.";
+    if (k === "userInfo") return "Rivian's account service didn't answer. It retries next poll.";
+    return `${k}: ${v}`;
   };
 
   Promise.all([load("latest.json"), load("rungs.json"), load("changes.json"), load("meta.json")]).then(([latest, rungs, changes, meta]) => {
     meta = meta || {};
     const banners = [];
-    if (meta.auth_expired) banners.push(`<div class="banner red">Rivian session expired, polling paused. Run the <a href="${repo ? `https://github.com/${repo.owner}/${repo.name}/actions/workflows/login.yml` : '#'}" target="_blank" rel="noopener">Login workflow</a>: start, then finish with the code.</div>`);
-    if (meta.mode === "mock") banners.push(`<div class="banner sand">Showing the sample order (${esc(meta.fixture || "fixture")}), not yours. Sign in with the Login workflow, then run Poll Rivian.</div>`);
-    if (meta.errors && Object.keys(meta.errors).some(k => !k.endsWith(".note"))) banners.push(`<div class="banner sand">Some Rivian queries failed last poll: ${esc(Object.entries(meta.errors).filter(([k]) => !k.endsWith(".note")).map(([k, v]) => `${k}: ${v}`).join(" · "))}</div>`);
+    if (meta.auth_expired) banners.push(`<div class="banner red"><span>Rivian signed this tracker out (it happens about weekly). Run the <a href="${wf('login.yml')}" target="_blank" rel="noopener">Login workflow</a>: start, then finish with the code. Polling resumes on its own.</span></div>`);
+    if (meta.mode === "mock") banners.push(`<div class="banner sand"><span>This is the sample order, not yours. Sign in with the <a href="${wf('login.yml')}" target="_blank" rel="noopener">Login workflow</a>, then run Poll Rivian.</span></div>`);
+    const errs = Object.entries(meta.errors || {}).filter(([k]) => !k.endsWith(".note"));
+    if (errs.length) banners.push(`<div class="banner sand"><span>${esc(errs.map(([k, v]) => ERROR_TEXT(k, v)).join(" "))}</span></div>`);
     $("banners").innerHTML = banners.join("");
 
     if (!latest || !rungs) { $("empty").hidden = false; $("pill").textContent = "No data"; return; }
@@ -230,76 +279,86 @@
     if (latest.windowText) {
       $("window").hidden = false; $("windowText").textContent = latest.windowText;
       const chg = (changes || []).find(c => /garageEstimatedInvitedToSelfConfigureDate$/.test(c.path));
-      const cfgDays = days(latest.configurationDate || latest.agreementSignedAt);
-      $("windowNote").textContent = (chg ? `Changed ${fmtD(chg.seen_at)}` : "Unchanged since first seen") + (cfgDays != null ? ` · configured ${cfgDays} days ago` : "");
+      $("windowNote").textContent = chg ? `Changed ${fmtD(chg.seen_at)}` : "Unchanged since first seen";
     }
 
     // Next
     const nxt = meta.next || rungs.filter(r => !r.reached).slice(0, 2);
-    $("next").innerHTML = nxt.length ? `<span class="label">Watching for next</span><span class="what">${esc(nxt.map(n => n.name).join(" or "))}</span><span class="fields">${esc(nxt.map(n => n.field).join(" · "))}</span>` : `<span class="label">Done</span><span class="what">Delivered. Enjoy the R2.</span>`;
+    const nxtWhy = nxt.map(n => (RUNG_TEXT[n.rung] || {}).todo ? RUNG_TEXT[n.rung].todo() : "").filter(Boolean);
+    $("next").innerHTML = nxt.length
+      ? `<span class="label">Watching for next</span><span class="what">${esc(nxt.map(n => n.name).join(" or "))}</span><span class="why">${esc(nxtWhy.join(". "))}</span><span class="raw">${esc(nxt.map(n => n.field).join(" · "))}</span>`
+      : `<span class="label">Done</span><span class="what">Delivered. Enjoy the R2.</span>`;
 
     // Tiles
     const reached = rungs.filter(r => r.reached).length;
-    const openSteps = (latest.steps || []).filter(s => s.locked === false && !s.hide);
+    const steps = (latest.steps || []).filter(s => s.key !== "delivery");
+    const openSteps = steps.filter(s => s.locked === false && !s.hide);
+    const here = Math.max(0, ...rungs.filter(r => r.reached).map(r => r.rung));
+    const hereRung = rungs.find(r => r.rung === here);
     $("tiles").innerHTML = [
-      ["Config", human(latest.configurationStatus) || "Unknown", fmtD(latest.configurationDate || latest.agreementSignedAt) || ""],
-      ["VIN", latest.vin ? "Assigned" : (latest.vehicleId ? "Build matched" : "Not yet"), latest.vin || ""],
-      ["Ladder", `${reached} of ${rungs.length}`, `${openSteps.length} step${openSteps.length === 1 ? "" : "s"} open`],
+      ["Configuration", human(latest.configurationStatus) || "Not yet", fmtD(latest.configurationDate || latest.agreementSignedAt) || ""],
+      ["VIN", latest.vin ? "Assigned" : (latest.vehicleId ? "Build matched" : "Not yet"), latest.vin || (latest.vehicleId ? "VIN comes next" : "")],
+      ["Progress", `Rung ${here} of ${rungs.length}`, hereRung ? hereRung.name : ""],
     ].map(([l, val, s]) => `<div class="tile"><span class="label">${l}</span><span class="v">${esc(val)}</span><span class="s">${esc(s)}</span></div>`).join("");
 
     // Ladder
-    const here = Math.max(0, ...rungs.filter(r => r.reached).map(r => r.rung));
     $("ladderCount").textContent = `${reached} of ${rungs.length}`;
     $("ladder").innerHTML = rungs.map(r => {
-      const cls = r.reached ? (r.rung === here && here < 9 ? "here" : "done") : "todo";
-      const when = r.reached ? (r.rung === here && here < 9 ? "You are here" : fmtD(r.reached_at)) : "Waiting";
-      const raw = `${r.field}: ${mono(r.value)}`;
-      const check = cls === "done" ? `<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="#F4F0E8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3 3 7-7"/></svg>` : "";
-      return `<div class="rung ${cls}"><span class="dot" aria-hidden="true">${check}</span><div class="body"><div class="row"><span class="name">${esc(r.name)}</span><span class="when">${esc(when)}</span></div><span class="raw">${esc(raw)}</span></div></div>`;
+      const isHere = r.rung === here && here < 9;
+      const cls = r.reached ? (isHere ? "here" : "done") : "todo";
+      const when = r.reached ? (isHere ? "You are here" : fmtD(r.reached_at)) : "";
+      const t = RUNG_TEXT[r.rung] || {};
+      const desc = r.reached ? (t.done ? t.done(r, latest) : "") : (t.todo ? t.todo() : "");
+      const check = cls === "done" ? `<svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="#F4F0E8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3 3 7-7"/></svg>` : "";
+      return `<div class="rung ${cls}"><span class="dot" aria-hidden="true">${check}</span><div class="body"><div class="row"><span class="name">${esc(r.name)}</span><span class="when">${esc(when)}</span></div>${desc ? `<span class="desc">${esc(desc)}</span>` : ""}<span class="raw">${esc(r.field)}: ${esc(mono(r.value))}</span></div></div>`;
     }).join("");
 
     // Steps
-    const steps = (latest.steps || []).filter(s => s.key !== "delivery");
-    const locked = steps.filter(s => s.locked && !s.completed).length;
-    $("stepsCount").textContent = `${openSteps.length} open · ${locked} locked`;
-    $("steps").innerHTML = steps.map(s => {
-      const cls = s.hide ? "" : (s.completed ? "done" : (s.locked === false ? "open" : ""));
-      const suffix = s.hide ? " · hidden" : (s.completed ? " · done" : (s.locked === false ? " · open" : ""));
-      return `<span class="chip ${cls}" title="${esc(s.key)}: ${esc(mono(s.status))}">${esc(s.label || s.key)}${suffix}</span>`;
-    }).join("");
+    if (!steps.length) {
+      $("stepsCount").textContent = "";
+      $("steps").innerHTML = "";
+      $("stepsHint").textContent = meta.errors && meta.errors.transactionStatus ? "Rivian's purchase-steps service didn't answer this poll. The steps come back when it does." : "Rivian hasn't returned purchase steps for this order yet.";
+    } else {
+      const locked = steps.filter(s => s.locked && !s.completed).length;
+      $("stepsCount").textContent = `${openSteps.length} open · ${locked} locked`;
+      $("steps").innerHTML = steps.map(s => {
+        const cls = s.hide ? "" : (s.completed ? "done" : (s.locked === false ? "open" : ""));
+        const suffix = s.hide ? " · hidden" : (s.completed ? " · done" : (s.locked === false ? " · open" : ""));
+        return `<span class="chip ${cls}" title="${esc(s.key)}: ${esc(mono(s.status))}">${esc(s.label || s.key)}${suffix}</span>`;
+      }).join("");
+      $("stepsHint").textContent = "Locked steps unlock when Rivian moves the order forward. Title and registration is usually first.";
+    }
 
-    // Feed: changes newest first, then backfilled order-record events
-    const events = (changes || []).slice(0, 12).map(c => ({ when: c.seen_at, text: `${c.kind === "added" ? "Set" : c.kind === "removed" ? "Cleared" : "Changed"}: ${c.path.split(".").slice(-2).join(".")}`, meta: `${mono(c.old)} → ${mono(c.new)}` }));
-    if (meta.first_poll_at) events.push({ when: meta.first_poll_at, text: "Baseline captured", meta: `${meta.fields_watched || "?"} fields watched · from first poll` });
-    if (latest.agreementSignedAt || latest.configurationDate) events.push({ when: latest.configurationDate || latest.agreementSignedAt, text: "Configuration locked, agreement signed", meta: `${mono(latest.configurationStatus)} · from order record` });
-    if (latest.orderDate) events.push({ when: latest.orderDate, text: "Preorder placed", meta: `${mono(latest.state)} · from order record` });
+    // Feed
+    const events = (changes || []).slice(0, 12).map(c => ({
+      when: c.seen_at,
+      text: `${pathLabel(c.path)}: ${friendlyVal(c.old)} → ${friendlyVal(c.new)}`,
+      meta: `${c.path}: ${mono(c.old)} → ${mono(c.new)}`, raw: true,
+    }));
+    if (meta.first_poll_at) events.push({ when: meta.first_poll_at, text: "Started watching this order", meta: `${meta.fields_watched || "?"} fields on every poll` });
+    if (latest.configurationDate || latest.agreementSignedAt) events.push({ when: latest.configurationDate || latest.agreementSignedAt, text: "You locked your configuration", meta: human(latest.configurationStatus) });
+    if (latest.orderDate) events.push({ when: latest.orderDate, text: "Preorder placed", meta: "" });
     events.sort((a, b) => new Date(b.when) - new Date(a.when));
     $("fieldsWatched").textContent = meta.fields_watched ? `${meta.fields_watched} fields watched` : "";
-    $("feed").innerHTML = events.map(e => `<div class="item"><span class="d">${esc(fmtD(e.when))}</span><div class="t"><span>${esc(e.text)}</span><span class="m">${esc(e.meta)}</span></div></div>`).join("") || `<div class="empty">Nothing yet.</div>`;
+    $("feed").innerHTML = events.map(e => `<div class="item"><span class="d">${esc(fmtD(e.when))}</span><div class="t"><span>${esc(e.text)}</span>${e.meta ? `<span class="${e.raw ? 'raw' : 'm'}">${esc(e.meta)}</span>` : ""}</div></div>`).join("") || `<div class="empty">Nothing yet.</div>`;
 
     // Watch list
-    const rows = [
-      ["invitedToSelfConfirm", latest.invitedToSelfConfirm],
-      ["configurationStatus", latest.configurationStatus],
-      ["vehicleId", latest.vehicleId],
-      ["fulfillmentSummaryStatus", latest.fulfillmentSummaryStatus],
-      ["vin", latest.vin],
-      ["isPreparingPurchase", latest.isPreparingPurchase],
-      ["delivery.status", latest.delivery && latest.delivery.status],
-      ["windowText", latest.windowText],
-    ];
-    $("watch").innerHTML = rows.map(([f, val]) => `<tr><td class="mono">${esc(f)}</td><td class="mono" style="color:${val == null || val === false ? 'var(--mute)' : 'var(--trail)'}">${esc(mono(val))}<div class="exp">next: ${esc(EXPECT[f] || "")}</div></td><td class="expcol" style="color:var(--granite)">${esc(EXPECT[f] || "")}</td></tr>`).join("");
+    $("watch").innerHTML = WATCH.map(([label, field, get, expect]) => {
+      const val = get(latest);
+      const on = !(val === null || val === undefined || val === false || val === "");
+      return `<div class="wrow"><div><div class="wf">${esc(label)}</div><div class="we">Next: ${esc(expect)}</div><span class="raw">${esc(field)}</span></div><div><div class="wn ${on ? 'on' : 'off'}">${esc(friendlyVal(val))}</div><span class="raw">${esc(mono(val))}</span></div></div>`;
+    }).join("");
 
-    // Build dates (only when Rivian has a vehicle record)
+    // Build dates
     const bd = latest.buildDates || {};
     const bdRows = Object.entries(bd).filter(([, val]) => val);
-    if (bdRows.length) { $("buildCard").hidden = false; $("buildDates").innerHTML = bdRows.map(([k, val]) => `<tr><td class="mono">${esc(k)}</td><td class="r">${esc(fmtD(val))}</td></tr>`).join(""); }
+    if (bdRows.length) { $("buildCard").hidden = false; $("buildDates").innerHTML = bdRows.map(([k, val]) => `<span class="k">${esc(pathLabel(k))}</span><span>${esc(fmtD(val))}</span>`).join(""); }
 
     // Footer
     const last = meta.last_poll_at, next = last ? new Date(new Date(last).getTime() + (meta.poll_interval_min || 240) * 60000) : null;
     const sess = meta.session_created_at ? days(meta.session_created_at) : null;
     $("dotStatus").className = meta.ok === false ? "bad" : "";
-    $("pollLine").textContent = [last ? `Polled ${fmtDT(last)}` : "Never polled", next ? `next ${fmtDT(next.toISOString())}` : null, sess != null ? `session ${sess} d old` : null].filter(Boolean).join(" · ");
+    $("pollLine").textContent = [last ? `Checked ${fmtDT(last)}` : "Never polled", next ? `next ${fmtDT(next.toISOString())}` : null, sess != null ? `signed in ${sess} d ago` : null].filter(Boolean).join(" · ");
   });
 })();
 </script>

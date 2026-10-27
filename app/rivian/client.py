@@ -117,29 +117,51 @@ class RivianClient:
         return data["orders"]["data"]
 
     def order(self, order_id: str) -> tuple[dict, str | None]:
-        """Extended selection first; falls back to the core selection. Returns (order, fallback_reason)."""
-        try:
-            data = self._post(Q.ORDERS, dict(Q.ORDER_EXT, variables={"id": order_id}), self._headers(t2d=True))
-            return data["order"], None
-        except RivianAuthError:
-            raise
-        except RivianError as e:
-            reason = f"extended order query rejected, using core: {e}"
-            log.warning(reason)
-        data = self._post(Q.ORDERS, dict(Q.ORDER_CORE, variables={"id": order_id}), self._headers(t2d=True))
-        return data["order"], reason
+        """Extended selection; fields Rivian's schema rejects are stripped and the query retried,
+        so one unknown field costs nothing. Returns (order, note)."""
+        data, note = self._post_adaptive(Q.ORDERS, Q.ORDER_EXT, {"id": order_id}, self._headers(t2d=True), Q.ORDER_CORE)
+        return data["order"], note
 
     def transaction_status(self, order_id: str) -> tuple[dict, str | None]:
+        """t2d endpoint first; if it is down (503 seen Oct 2026) try the same query on the gateway."""
+        notes = []
+        for url, label in ((Q.T2D, "t2d"), (Q.GATEWAY, "gateway")):
+            try:
+                data, note = self._post_adaptive(url, Q.TRANSACTION_STATUS_EXT, {"orderId": order_id}, self._headers(t2d=True), Q.TRANSACTION_STATUS_CORE)
+                if note:
+                    notes.append(f"{label}: {note}")
+                return data["transactionStatus"], "; ".join(notes) or None
+            except RivianAuthError:
+                raise
+            except RivianError as e:
+                notes.append(f"{label}: {e}")
+        raise RivianError("; ".join(notes))
+
+    def _post_adaptive(self, url: str, doc: dict, variables: dict, headers: dict, fallback: dict | None = None) -> tuple[dict, str | None]:
+        """POST a document; on 'Cannot query field X' errors, drop those fields and retry once.
+        If that still fails and a fallback document is given, use it. Returns (data, note)."""
         try:
-            data = self._post(Q.T2D, dict(Q.TRANSACTION_STATUS_EXT, variables={"orderId": order_id}), self._headers(t2d=True))
-            return data["transactionStatus"], None
+            return self._post(url, dict(doc, variables=variables), headers), None
         except RivianAuthError:
             raise
         except RivianError as e:
-            reason = f"extended transactionStatus rejected, using core: {e}"
-            log.warning(reason)
-        data = self._post(Q.T2D, dict(Q.TRANSACTION_STATUS_CORE, variables={"orderId": order_id}), self._headers(t2d=True))
-        return data["transactionStatus"], reason
+            rejected = Q.rejected_fields(str(e))
+            if not rejected:
+                if fallback is None:
+                    raise
+                log.warning("query failed (%s); using fallback selection", e)
+                return self._post(url, dict(fallback, variables=variables), headers), f"fallback selection used: {e}"
+        trimmed = dict(doc, query=Q.strip_fields(doc["query"], rejected))
+        try:
+            data = self._post(url, dict(trimmed, variables=variables), headers)
+            return data, f"schema rejected {sorted(rejected)}; retried without them"
+        except RivianAuthError:
+            raise
+        except RivianError as e2:
+            if fallback is None:
+                raise
+            log.warning("trimmed query failed (%s); using fallback selection", e2)
+            return self._post(url, dict(fallback, variables=variables), headers), f"schema rejected {sorted(rejected)}; fallback selection used: {e2}"
 
     def delivery(self, order_id: str) -> dict | None:
         data = self._post(Q.GATEWAY, dict(Q.DELIVERY, variables={"orderId": order_id}), self._headers())

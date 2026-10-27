@@ -37,7 +37,7 @@ Your personal details never appear in the repo in plain text. See [Privacy](#pri
    | `SESSION_KEY` | the random string from step 4 |
    | `NTFY_TOPIC` | the topic name from step 3 |
 
-   GitHub stores these encrypted; nobody, including you, can read them back.
+   Use **Repository secrets** (the green "New repository secret" button), not Environment secrets; the workflows only read repository secrets. GitHub stores them encrypted; nobody, including you, can read them back.
 
 6. **Enable the automations.** Click the **Actions** tab. If GitHub shows "I understand my workflows, go ahead and enable them", click it.
 
@@ -105,7 +105,7 @@ docs/data/*.json              latest.json, rungs.json, changes.json, meta.json (
 fixtures/                     redacted sample payloads: pending_fulfillment (real shape), build_matched, vin_assigned (synthetic)
 ```
 
-Queries, all read-only: `vehicleOrders` and `delivery` and `getUserInfo` on the gateway, `order` on the orders endpoint (an extended selection with the garage fields, falling back to the classic selection if Rivian rejects it), and `transactionStatus` on the t2d endpoint. Nothing here sends a command or writes to Rivian.
+Queries, all read-only: `vehicleOrders`, `delivery` and `getUserInfo` on the gateway, `order` on the orders endpoint, and `transactionStatus` on the t2d endpoint (with a gateway fallback). The `order` and `transactionStatus` selections ask for every field the garage page shows; if Rivian's schema rejects some, the client drops just those fields and retries, so an unknown field never costs the poll. Nothing here sends a command or writes to Rivian.
 
 ## Running locally
 
