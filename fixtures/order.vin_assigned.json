@@ -1,0 +1,821 @@
+{
+  "_fixture": {
+    "name": "order.vin_assigned",
+    "rung": 7,
+    "source": "Synthetic: build_matched plus VIN, READY_FOR_FULFILLMENT, isPreparingPurchase true, titleAndReg unlocked, delivery INIT."
+  },
+  "order": {
+    "vin": "7PDSGABA0SN000000",
+    "vehicleId": "REDACTED_VEHICLE_ID",
+    "userId": "REDACTED_USER_ID",
+    "fulfillmentSummaryStatus": "READY_FOR_FULFILLMENT",
+    "invitedToSelfConfirm": true,
+    "invitedToSelfConfigure": false,
+    "configurationStatus": "HARD_LOCKED",
+    "consumerStatuses": {
+      "isPreparingPurchase": true,
+      "isConsumerFlowComplete": false,
+      "rivianCare": {
+        "status": "NOT_ELIGIBLE",
+        "consumerStatus": "InEligible",
+        "consumerSubStatus": null,
+        "details": "",
+        "__typename": "T2DServiceStatus"
+      },
+      "steps": {
+        "titleAndReg": {
+          "displayOrder": 1,
+          "hide": false,
+          "locked": false,
+          "error": false,
+          "notStarted": true,
+          "inProgress": false,
+          "completed": false,
+          "allowEditPostCompletion": false,
+          "postEditImpactedSteps": [],
+          "dependsOnConsumerCompletion": [],
+          "completedConsumerDependencies": [],
+          "incompleteConsumerDependencies": [],
+          "__typename": "PurchaseProcessStepDetails"
+        },
+        "taxCredit": {
+          "displayOrder": 2,
+          "hide": false,
+          "locked": true,
+          "error": false,
+          "notStarted": true,
+          "inProgress": false,
+          "completed": false,
+          "allowEditPostCompletion": false,
+          "postEditImpactedSteps": [],
+          "dependsOnConsumerCompletion": [
+            "TitleAndReg",
+            "TradeIn",
+            "DeliveryMethod",
+            "Finance"
+          ],
+          "completedConsumerDependencies": [],
+          "incompleteConsumerDependencies": [],
+          "__typename": "PurchaseProcessStepDetails"
+        },
+        "tradeIn": {
+          "displayOrder": 3,
+          "hide": false,
+          "locked": true,
+          "error": false,
+          "notStarted": false,
+          "inProgress": false,
+          "completed": false,
+          "allowEditPostCompletion": true,
+          "postEditImpactedSteps": [],
+          "dependsOnConsumerCompletion": [],
+          "completedConsumerDependencies": [],
+          "incompleteConsumerDependencies": [],
+          "__typename": "PurchaseProcessStepDetails"
+        },
+        "deliveryMethod": {
+          "displayOrder": 4,
+          "hide": false,
+          "locked": false,
+          "error": false,
+          "notStarted": true,
+          "inProgress": false,
+          "completed": false,
+          "allowEditPostCompletion": true,
+          "postEditImpactedSteps": [],
+          "dependsOnConsumerCompletion": [],
+          "completedConsumerDependencies": [],
+          "incompleteConsumerDependencies": [],
+          "__typename": "PurchaseProcessStepDetails"
+        },
+        "rivianCare": {
+          "displayOrder": 5,
+          "hide": true,
+          "locked": true,
+          "error": false,
+          "notStarted": false,
+          "inProgress": false,
+          "completed": true,
+          "allowEditPostCompletion": false,
+          "postEditImpactedSteps": [],
+          "dependsOnConsumerCompletion": [
+            "TitleAndReg"
+          ],
+          "completedConsumerDependencies": [],
+          "incompleteConsumerDependencies": [
+            "TitleAndReg"
+          ],
+          "__typename": "PurchaseProcessStepDetails"
+        },
+        "finance": {
+          "displayOrder": 6,
+          "hide": false,
+          "locked": true,
+          "error": false,
+          "notStarted": false,
+          "inProgress": false,
+          "completed": false,
+          "allowEditPostCompletion": false,
+          "postEditImpactedSteps": [],
+          "dependsOnConsumerCompletion": [
+            "TitleAndReg",
+            "TradeIn",
+            "DeliveryMethod"
+          ],
+          "completedConsumerDependencies": [],
+          "incompleteConsumerDependencies": [
+            "TitleAndReg",
+            "TradeIn",
+            "DeliveryMethod"
+          ],
+          "__typename": "PurchaseProcessStepDetails"
+        },
+        "insurance": {
+          "displayOrder": 7,
+          "hide": false,
+          "locked": true,
+          "error": false,
+          "notStarted": false,
+          "inProgress": false,
+          "completed": false,
+          "allowEditPostCompletion": false,
+          "postEditImpactedSteps": [],
+          "dependsOnConsumerCompletion": [
+            "TitleAndReg"
+          ],
+          "completedConsumerDependencies": [],
+          "incompleteConsumerDependencies": [
+            "TitleAndReg"
+          ],
+          "__typename": "PurchaseProcessStepDetails"
+        },
+        "documentUpload": {
+          "displayOrder": 8,
+          "hide": false,
+          "locked": true,
+          "error": false,
+          "notStarted": false,
+          "inProgress": false,
+          "completed": false,
+          "allowEditPostCompletion": false,
+          "postEditImpactedSteps": [],
+          "dependsOnConsumerCompletion": [
+            "TitleAndReg"
+          ],
+          "completedConsumerDependencies": [],
+          "incompleteConsumerDependencies": [
+            "TitleAndReg"
+          ],
+          "__typename": "PurchaseProcessStepDetails"
+        },
+        "contracts": {
+          "displayOrder": 9,
+          "hide": false,
+          "locked": true,
+          "error": false,
+          "notStarted": false,
+          "inProgress": false,
+          "completed": false,
+          "allowEditPostCompletion": false,
+          "postEditImpactedSteps": [],
+          "dependsOnConsumerCompletion": [
+            "TitleAndReg",
+            "TradeIn",
+            "Finance",
+            "DocumentUpload"
+          ],
+          "completedConsumerDependencies": [],
+          "incompleteConsumerDependencies": [
+            "TitleAndReg",
+            "TradeIn",
+            "Finance",
+            "DocumentUpload",
+            "DeliveryScheduling"
+          ],
+          "__typename": "PurchaseProcessStepDetails"
+        },
+        "financeAgreement": {
+          "displayOrder": 10,
+          "hide": true,
+          "locked": true,
+          "error": false,
+          "notStarted": false,
+          "inProgress": false,
+          "completed": false,
+          "allowEditPostCompletion": false,
+          "postEditImpactedSteps": [],
+          "dependsOnConsumerCompletion": [
+            "TitleAndReg",
+            "TradeIn",
+            "Finance"
+          ],
+          "completedConsumerDependencies": [],
+          "incompleteConsumerDependencies": [
+            "TitleAndReg",
+            "TradeIn",
+            "Finance"
+          ],
+          "__typename": "PurchaseProcessStepDetails"
+        },
+        "payment": {
+          "displayOrder": 11,
+          "hide": false,
+          "locked": true,
+          "error": false,
+          "notStarted": false,
+          "inProgress": false,
+          "completed": false,
+          "allowEditPostCompletion": false,
+          "postEditImpactedSteps": [],
+          "dependsOnConsumerCompletion": [
+            "TitleAndReg",
+            "TradeIn",
+            "Finance",
+            "Contracts"
+          ],
+          "completedConsumerDependencies": [],
+          "incompleteConsumerDependencies": [
+            "TitleAndReg",
+            "TradeIn",
+            "Finance",
+            "Contracts",
+            "DeliveryScheduling"
+          ],
+          "__typename": "PurchaseProcessStepDetails"
+        },
+        "deliveryScheduling": {
+          "displayOrder": 12,
+          "hide": false,
+          "locked": true,
+          "error": false,
+          "notStarted": false,
+          "inProgress": false,
+          "completed": false,
+          "allowEditPostCompletion": false,
+          "postEditImpactedSteps": [],
+          "dependsOnConsumerCompletion": [
+            "DeliveryMethod"
+          ],
+          "completedConsumerDependencies": [],
+          "incompleteConsumerDependencies": [
+            "DeliveryMethod"
+          ],
+          "__typename": "PurchaseProcessStepDetails"
+        },
+        "__typename": "PurchaseProcessSteps"
+      },
+      "customerChecklist": {
+        "items": [
+          {
+            "item": "PreAdventure",
+            "displayOrder": 0,
+            "hide": false,
+            "locked": false,
+            "error": false,
+            "notStarted": true,
+            "inProgress": false,
+            "completed": false,
+            "allowEditPostCompletion": false,
+            "__typename": "ChecklistItem"
+          },
+          {
+            "item": "TitleAndReg",
+            "displayOrder": 1,
+            "hide": false,
+            "locked": true,
+            "error": false,
+            "notStarted": false,
+            "inProgress": false,
+            "completed": false,
+            "allowEditPostCompletion": false,
+            "__typename": "ChecklistItem"
+          },
+          {
+            "item": "TaxCredit",
+            "displayOrder": 2,
+            "hide": false,
+            "locked": true,
+            "error": false,
+            "notStarted": false,
+            "inProgress": false,
+            "completed": false,
+            "allowEditPostCompletion": false,
+            "__typename": "ChecklistItem"
+          },
+          {
+            "item": "TradeIn",
+            "displayOrder": 3,
+            "hide": false,
+            "locked": true,
+            "error": false,
+            "notStarted": false,
+            "inProgress": false,
+            "completed": false,
+            "allowEditPostCompletion": false,
+            "__typename": "ChecklistItem"
+          },
+          {
+            "item": "DeliveryMethod",
+            "displayOrder": 4,
+            "hide": false,
+            "locked": true,
+            "error": false,
+            "notStarted": false,
+            "inProgress": false,
+            "completed": false,
+            "allowEditPostCompletion": true,
+            "__typename": "ChecklistItem"
+          },
+          {
+            "item": "Finance",
+            "displayOrder": 6,
+            "hide": false,
+            "locked": true,
+            "error": false,
+            "notStarted": false,
+            "inProgress": false,
+            "completed": false,
+            "allowEditPostCompletion": false,
+            "__typename": "ChecklistItem"
+          },
+          {
+            "item": "Insurance",
+            "displayOrder": 7,
+            "hide": false,
+            "locked": true,
+            "error": false,
+            "notStarted": false,
+            "inProgress": false,
+            "completed": false,
+            "allowEditPostCompletion": false,
+            "__typename": "ChecklistItem"
+          },
+          {
+            "item": "Contracts",
+            "displayOrder": 9,
+            "hide": false,
+            "locked": true,
+            "error": false,
+            "notStarted": false,
+            "inProgress": false,
+            "completed": false,
+            "allowEditPostCompletion": false,
+            "__typename": "ChecklistItem"
+          },
+          {
+            "item": "Payment",
+            "displayOrder": 11,
+            "hide": false,
+            "locked": true,
+            "error": false,
+            "notStarted": false,
+            "inProgress": false,
+            "completed": false,
+            "allowEditPostCompletion": false,
+            "__typename": "ChecklistItem"
+          },
+          {
+            "item": "DeliveryScheduling",
+            "displayOrder": 12,
+            "hide": false,
+            "locked": true,
+            "error": false,
+            "notStarted": false,
+            "inProgress": false,
+            "completed": false,
+            "allowEditPostCompletion": false,
+            "__typename": "ChecklistItem"
+          }
+        ],
+        "__typename": "CustomerChecklist"
+      },
+      "titleAndReg": {
+        "consumerStatus": "NotStarted",
+        "consumerSubStatus": null,
+        "status": "NOT_STARTED",
+        "details": "{\"taxCreditStatus\":\"NotStarted\",\"taxesAndFeesCalculated\":null,\"taxAndFeeCalculationStatus\":null,\"hasCoRegistrant\":\"false\"}",
+        "__typename": "T2DServiceStatus"
+      },
+      "tradeIn": {
+        "consumerStatus": "NotStarted",
+        "consumerSubStatus": null,
+        "status": "TODO_NOT_VISITED",
+        "details": "",
+        "__typename": "T2DServiceStatus"
+      },
+      "finance": {
+        "consumerStatus": "NotStarted",
+        "consumerSubStatus": null,
+        "status": "UNINITIATED",
+        "details": "{\"finance_agreement_step_enabled\":\"true\",\"financeChoice\":\"PAY_IN_FULL\"}",
+        "__typename": "T2DServiceStatus"
+      },
+      "delivery": {
+        "consumerStatus": "NotStarted",
+        "consumerSubStatus": null,
+        "status": "",
+        "details": "{}",
+        "__typename": "T2DServiceStatus"
+      },
+      "documentUpload": {
+        "consumerStatus": "NotStarted",
+        "consumerSubStatus": null,
+        "status": "NOT_STARTED",
+        "details": "{}",
+        "__typename": "T2DServiceStatus"
+      },
+      "insurance": {
+        "consumerStatus": "NotStarted",
+        "consumerSubStatus": null,
+        "status": "NOT_VISITED",
+        "details": "",
+        "__typename": "T2DServiceStatus"
+      },
+      "contracts": {
+        "consumerStatus": "NotStarted",
+        "consumerSubStatus": null,
+        "status": "NOT_STARTED",
+        "details": "{\"isRegenerated\":\"false\"}",
+        "__typename": "T2DServiceStatus"
+      },
+      "payment": {
+        "consumerStatus": "NotStarted",
+        "consumerSubStatus": null,
+        "status": "NO_PAYMENT_SUBMITTED",
+        "details": "",
+        "__typename": "T2DServiceStatus"
+      },
+      "__typename": "ConsumerVehicleStatuses"
+    },
+    "state": "ORDERED",
+    "orderDate": "2026-03-08T02:42:10.515Z",
+    "billingAddress": {
+      "firstName": "REDACTED",
+      "lastName": "REDACTED",
+      "line1": "REDACTED",
+      "line2": null,
+      "city": "REDACTED",
+      "state": "PA",
+      "country": "US",
+      "postalCode": "REDACTED",
+      "phone": "REDACTED",
+      "__typename": "OrderAddress"
+    },
+    "shippingAddress": {
+      "firstName": "REDACTED",
+      "lastName": "REDACTED",
+      "line1": "REDACTED",
+      "line2": null,
+      "city": "REDACTED",
+      "state": "PA",
+      "country": "US",
+      "postalCode": "REDACTED",
+      "__typename": "OrderAddress"
+    },
+    "orderCancelDate": null,
+    "orderConfirmationType": "SELF_SERVE_LOCK",
+    "orderEmail": "REDACTED",
+    "currency": "USD",
+    "locale": "en-US",
+    "storeId": "1",
+    "type": "VEHICLE",
+    "subtotal": 61965,
+    "detailedSubtotal": {
+      "subtotalBeforeDiscounts": 61965,
+      "__typename": "DetailedSubtotal"
+    },
+    "detailedTotal": {
+      "totalBeforeDiscounts": 63460,
+      "__typename": "DetailedTotal"
+    },
+    "discountTotal": 0,
+    "taxTotal": 0,
+    "feesTotal": 1495,
+    "paidTotal": 500,
+    "remainingTotal": 62960,
+    "outstandingBalance": 62960,
+    "costAfterCredits": 62960,
+    "credits": null,
+    "total": 63460,
+    "payments": [
+      {
+        "id": "REDACTED_PAYMENT_ID_1",
+        "intent": "DEPOSIT",
+        "date": "2026-09-22T15:19:20.777Z",
+        "method": "CREDIT_CARD",
+        "amount": 400,
+        "referenceNumber": null,
+        "status": "SUCCEEDED",
+        "card": {
+          "last4": "0000",
+          "expiryDate": "1/2030",
+          "brand": "VISA",
+          "__typename": "CardDetails"
+        },
+        "bank": null,
+        "transactionNotes": null,
+        "__typename": "OrderPayment"
+      },
+      {
+        "id": "REDACTED_PAYMENT_ID_2",
+        "intent": "DEPOSIT",
+        "date": "2026-03-08T02:42:10.243Z",
+        "method": "GOOGLE_PAY",
+        "amount": 100,
+        "referenceNumber": null,
+        "status": "SUCCEEDED",
+        "card": {
+          "last4": "0000",
+          "expiryDate": "1/2030",
+          "brand": "VISA",
+          "__typename": "CardDetails"
+        },
+        "bank": null,
+        "transactionNotes": null,
+        "__typename": "OrderPayment"
+      }
+    ],
+    "tradeIns": null,
+    "items": [
+      {
+        "id": "REDACTED_ITEM_ID_1",
+        "discounts": null,
+        "subtotal": 225,
+        "quantity": 1,
+        "title": "R2 All Weather Mats",
+        "productId": "1cab8a26-281b-41ce-a739-8392db3c3e86",
+        "type": "ACCESSORIES",
+        "unitPrice": 225,
+        "fees": null,
+        "taxes": null,
+        "sku": "PROCSHQ0DS",
+        "configuration": null,
+        "__typename": "OrderItem"
+      },
+      {
+        "id": "REDACTED_ITEM_ID_2",
+        "discounts": null,
+        "subtotal": 50,
+        "quantity": 1,
+        "title": "J1772 AC Adapter",
+        "productId": "49155e1d-29ca-497f-a211-c07820b5026d",
+        "type": "ACCESSORIES",
+        "unitPrice": 50,
+        "fees": null,
+        "taxes": null,
+        "sku": "PROCCTG7CO",
+        "configuration": null,
+        "__typename": "OrderItem"
+      },
+      {
+        "id": "REDACTED_ITEM_ID_3",
+        "discounts": null,
+        "subtotal": 200,
+        "quantity": 1,
+        "title": "Combo CCS1 Adapter",
+        "productId": "a57fdc55-b85b-4359-8f85-d12353abe80b",
+        "type": "ACCESSORIES",
+        "unitPrice": 200,
+        "fees": null,
+        "taxes": null,
+        "sku": "PROC7DQTIG",
+        "configuration": null,
+        "__typename": "OrderItem"
+      },
+      {
+        "id": "REDACTED_ITEM_ID_4",
+        "discounts": null,
+        "subtotal": 61490,
+        "quantity": 1,
+        "title": "Rivian R2",
+        "productId": "d9c77f81-b11e-4ac5-ae62-b68f57c5e52f",
+        "type": "VEHICLE",
+        "unitPrice": 61490,
+        "fees": {
+          "items": [
+            {
+              "description": "Destination fee",
+              "amount": 1495,
+              "code": "DELIVERY_FEE",
+              "type": "VEHICLE",
+              "__typename": "OrderItemFeeItem"
+            }
+          ],
+          "total": 1495,
+          "__typename": "OrderItemFees"
+        },
+        "taxes": null,
+        "sku": "R2",
+        "configuration": {
+          "configurationDate": "2026-09-22T15:19:20.497Z",
+          "priceAdjustments": null,
+          "basePrice": 44990,
+          "version": "R2C_2.4",
+          "options": [
+            {
+              "optionId": "GEN-1",
+              "optionName": "Generation One",
+              "groupId": "V_GEN",
+              "groupName": "Vehicle Generation",
+              "price": 0,
+              "__typename": "OrderConfigurationOption"
+            },
+            {
+              "optionId": "2027",
+              "optionName": "2027",
+              "groupId": "MODEL_YEAR",
+              "groupName": "Model Year",
+              "price": 0,
+              "__typename": "OrderConfigurationOption"
+            },
+            {
+              "optionId": "RGN-USA",
+              "optionName": "United States of America",
+              "groupId": "RGN",
+              "groupName": "Region",
+              "price": 0,
+              "__typename": "OrderConfigurationOption"
+            },
+            {
+              "optionId": "BLD-PRF2",
+              "optionName": "R2 Performance",
+              "groupId": "BLD",
+              "groupName": "Build",
+              "price": 13000,
+              "__typename": "OrderConfigurationOption"
+            },
+            {
+              "optionId": "BAT-L02",
+              "optionName": "Large",
+              "groupId": "BAT",
+              "groupName": "Battery",
+              "price": 0,
+              "__typename": "OrderConfigurationOption"
+            },
+            {
+              "optionId": "MOT-202",
+              "optionName": "Dual",
+              "groupId": "MOT",
+              "groupName": "Motor",
+              "price": 0,
+              "__typename": "OrderConfigurationOption"
+            },
+            {
+              "optionId": "DTN-AWDP",
+              "optionName": "All-Wheel Drive Performance",
+              "groupId": "DTN",
+              "groupName": "Drivetrain",
+              "price": 0,
+              "__typename": "OrderConfigurationOption"
+            },
+            {
+              "optionId": "LPKG-001",
+              "optionName": "Launch Package",
+              "groupId": "LPKG",
+              "groupName": "Launch",
+              "price": 0,
+              "__typename": "OrderConfigurationOption"
+            },
+            {
+              "optionId": "TOW-001",
+              "optionName": "Tow Package",
+              "groupId": "TOW",
+              "groupName": "Tow",
+              "price": 0,
+              "__typename": "OrderConfigurationOption"
+            },
+            {
+              "optionId": "AUTO-RAP01",
+              "optionName": "Autonomy+",
+              "groupId": "AUTO",
+              "groupName": "Autonomy",
+              "price": 0,
+              "__typename": "OrderConfigurationOption"
+            },
+            {
+              "optionId": "KEYS-001",
+              "optionName": "Launch Key Fob",
+              "groupId": "KEYS",
+              "groupName": "Keys",
+              "price": 0,
+              "__typename": "OrderConfigurationOption"
+            },
+            {
+              "optionId": "EXP-FGR",
+              "optionName": "Forest Green",
+              "groupId": "EXP",
+              "groupName": "Exterior",
+              "price": 1500,
+              "__typename": "OrderConfigurationOption"
+            },
+            {
+              "optionId": "WHL-20AT",
+              "optionName": "20\" Black Sand All-Terrain",
+              "groupId": "WHL",
+              "groupName": "Wheels",
+              "price": 1000,
+              "__typename": "OrderConfigurationOption"
+            },
+            {
+              "optionId": "INT-PCC",
+              "optionName": "Coastal Cloud Signature",
+              "groupId": "INT",
+              "groupName": "Interior",
+              "price": 1000,
+              "__typename": "OrderConfigurationOption"
+            }
+          ],
+          "__typename": "OrderConfiguration"
+        },
+        "__typename": "OrderItem"
+      }
+    ],
+    "voucherMetadata": null,
+    "vehicle": null,
+    "garageSurvey": {
+      "PERFORMANCE_LAUNCH_PACKAGE_INTEREST": true
+    },
+    "garageLeaseStatus": "NOT_LEASING",
+    "garageEstimatedInvitedToSelfConfigureDate": "in September–November 2026",
+    "garageInitialAgreementSignedAt": "2026-09-22T15:19:19.667Z",
+    "t2dRefreshEnabled": true,
+    "__typename": "Order"
+  },
+  "financeSummary": {
+    "orderId": "REDACTED_ORDER_ID",
+    "status": "UNINITIATED",
+    "financeChoice": null,
+    "__typename": "FinanceSummary"
+  },
+  "deliveryData": {
+    "delivery": {
+      "status": "INIT",
+      "carrier": "RIVIAN",
+      "deliveryAddress": {
+        "addressLine1": "REDACTED",
+        "addressLine2": null,
+        "city": "REDACTED",
+        "state": "PA",
+        "country": "US",
+        "zipcode": "REDACTED"
+      },
+      "appointmentDetails": null,
+      "vehicleVIN": "7PDSGABA0SN000000"
+    }
+  },
+  "vehicleOrders_derived": {
+    "_note": "Shape of the gateway vehicleOrders query for this order, derived from the order payload.",
+    "id": "REDACTED_ORDER_ID",
+    "orderDate": "2026-03-08T02:42:10.515Z",
+    "state": "ORDERED",
+    "configurationStatus": "HARD_LOCKED",
+    "fulfillmentSummaryStatus": "READY_FOR_FULFILLMENT",
+    "items": [
+      {
+        "sku": "PROCSHQ0DS"
+      },
+      {
+        "sku": "PROCCTG7CO"
+      },
+      {
+        "sku": "PROC7DQTIG"
+      },
+      {
+        "sku": "R2"
+      }
+    ],
+    "consumerStatuses": {
+      "isConsumerFlowComplete": false
+    }
+  },
+  "userInfo": {
+    "id": "REDACTED",
+    "email": "REDACTED",
+    "vehicles": [
+      {
+        "id": "REDACTED_VEHICLE_ID",
+        "name": null,
+        "roles": [
+          "OWNER"
+        ],
+        "vin": "7PDSGABA0SN000000",
+        "state": "PRE_DELIVERY",
+        "createdAt": "2026-11-20T14:00:00.000Z",
+        "updatedAt": "2026-11-20T14:00:00.000Z",
+        "vehicle": {
+          "id": "REDACTED_VEHICLE_ID",
+          "vin": "7PDSGABA0SN000000",
+          "modelYear": 2027,
+          "make": "RIVIAN",
+          "model": "R2",
+          "expectedBuildDate": "2026-12-08",
+          "plannedBuildDate": "2026-12-08",
+          "expectedGeneralAssemblyStartDate": null,
+          "actualGeneralAssemblyDate": "2026-12-09",
+          "otaEarlyAccessStatus": null,
+          "mobileConfiguration": null
+        }
+      }
+    ]
+  }
+}

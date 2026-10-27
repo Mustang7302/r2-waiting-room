@@ -1,0 +1,14 @@
+{
+  "_comment": "Copy to settings.json to override defaults. Every key is optional.",
+  "full_vin": false,
+  "order_id": null,
+  "noise": [
+    "offersByStore.*",
+    "vehicleImages.*",
+    "ENV.*",
+    "*Enabled",
+    "calculator.*",
+    "priceBreakdown.*",
+    "*.updatedAt"
+  ]
+}

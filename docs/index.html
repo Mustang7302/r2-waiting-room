@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>R2 Waiting Room</title>
+<meta name="description" content="Watches a Rivian R2 order for the hidden signals that precede production and delivery.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+  :root {
+    --forest: #1C3329; --moss: #2E5241; --limestone: #F4F0E8; --sand: #E9E2D3; --granite: #5B655F;
+    --ink: #16221C; --yellow: #F2B632; --yellow-soft: #FBEBC4; --yellow-ink: #6B4A10; --trail: #3E7D5A;
+    --ochre: #A1651F; --mute: #8A938D; --red: #B4432E; --card: #FFFFFF; --on-forest: #BFCBC2;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --limestone: #121C17; --sand: #26352D; --card: #1A2620; --ink: #EEEAE0; --granite: #A9B3AC; --mute: #7E8882;
+      --trail: #7CC79A; --ochre: #E0A84F; --yellow-soft: #3D3416; --yellow-ink: #F2C66D;
+    }
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html, body { margin: 0; background: var(--limestone); color: var(--ink); font-family: Manrope, system-ui, sans-serif; }
+  a { color: inherit; }
+  .wrap { max-width: 1120px; margin: 0 auto; }
+  .hero { position: relative; overflow: hidden; background: var(--forest); color: var(--limestone); padding: 28px 20px 24px; }
+  .hero svg.topo { position: absolute; inset: 0; width: 100%; height: 100%; opacity: .16; }
+  .hero .inner { position: relative; display: flex; flex-direction: column; gap: 16px; }
+  .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--on-forest); }
+  .pill { display: inline-flex; align-items: center; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; background: var(--yellow); color: #16221C; padding: 6px 10px; border-radius: 999px; white-space: nowrap; }
+  .pill.red { background: var(--red); color: #fff; }
+  .pill.muted { background: rgba(244,240,232,.18); color: var(--limestone); }
+  h1 { margin: 0; font-size: 34px; line-height: 1.05; font-weight: 800; letter-spacing: -.02em; }
+  .sub { margin: 0; font-size: 14px; color: var(--on-forest); }
+  .window { display: flex; flex-direction: column; gap: 6px; padding-top: 10px; border-top: 1px solid rgba(244,240,232,.18); }
+  .window .big { font-size: 24px; font-weight: 800; letter-spacing: -.01em; }
+  .window .note { font-size: 12px; color: var(--on-forest); }
+  .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand .mark { width: 28px; height: 28px; border-radius: 8px; background: var(--yellow); display: inline-flex; align-items: center; justify-content: center; }
+  .brand span { font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+  main { padding: 20px 16px 32px; display: grid; gap: 16px; grid-template-columns: 1fr; }
+  .card { background: var(--card); border: 1px solid var(--sand); border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  .card h2 { margin: 0; font-size: 16px; font-weight: 800; letter-spacing: -.01em; }
+  .card .head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .label { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--granite); }
+  .callout { border-left: 4px solid var(--yellow); gap: 4px; padding: 14px 16px; border-radius: 14px; }
+  .callout .what { font-size: 14px; font-weight: 700; }
+  .callout .fields { font-size: 12px; color: var(--granite); font-family: var(--mono); }
+  .banner { border-radius: 14px; padding: 14px 16px; font-size: 13px; line-height: 1.45; }
+  .banner.red { background: var(--red); color: #fff; }
+  .banner.sand { background: var(--yellow-soft); color: var(--yellow-ink); }
+  .banner a { color: inherit; font-weight: 700; }
+  .ladder { position: relative; display: flex; flex-direction: column; }
+  .ladder::before { content: ""; position: absolute; left: 11px; top: 14px; bottom: 28px; width: 2px; background: var(--sand); }
+  .rung { position: relative; display: flex; gap: 14px; padding: 6px 0 12px; }
+  .dot { width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; background: var(--limestone); border: 2px solid var(--sand); }
+  .rung.done .dot { background: var(--forest); border-color: var(--forest); }
+  .rung.here .dot { background: var(--card); border: 3px solid var(--yellow); }
+  .rung.here .dot::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--yellow); }
+  .rung .body { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+  .rung .name { font-size: 14px; font-weight: 700; }
+  .rung.todo .name { font-weight: 600; color: var(--granite); }
+  .rung .when { font-size: 11px; color: var(--granite); }
+  .rung.here .when { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ochre); }
+  .rung .raw { font-size: 11px; font-family: var(--mono); color: var(--mute); word-break: break-word; }
+  .rung.done .raw { color: var(--trail); }
+  .rung.here .raw { color: var(--ochre); }
+  .feed { display: flex; flex-direction: column; }
+  .feed .item { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--sand); }
+  .feed .item:last-child { border-bottom: 0; }
+  .feed .d { width: 56px; flex-shrink: 0; font-size: 12px; color: var(--granite); }
+  .feed .t { display: flex; flex-direction: column; gap: 2px; min-width: 0; font-size: 13px; }
+  .feed .m { font-size: 11px; color: var(--granite); font-family: var(--mono); word-break: break-all; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-size: 11px; font-weight: 600; padding: 6px 10px; border-radius: 999px; background: var(--limestone); color: var(--granite); border: 1px solid var(--sand); }
+  .chip.open { background: var(--yellow-soft); color: var(--yellow-ink); border-color: transparent; font-weight: 700; }
+  .chip.done { background: var(--forest); color: var(--limestone); border-color: transparent; font-weight: 700; }
+  .tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .tile { background: var(--card); border: 1px solid var(--sand); border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .tile .v { font-size: 14px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tile .s { font-size: 11px; color: var(--granite); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; padding: 6px 0; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--granite); border-bottom: 1px solid var(--sand); font-weight: 700; }
+  td { padding: 9px 0; border-bottom: 1px solid var(--sand); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  td.mono { font-family: var(--mono); font-size: 12px; overflow-wrap: anywhere; }
+  td .exp { display: none; font-family: Manrope, system-ui, sans-serif; font-size: 11px; color: var(--granite); margin-top: 2px; }
+  @media (max-width: 899px) { th.expcol, td.expcol { display: none; } td .exp { display: block; } }
+  td.r { text-align: right; color: var(--granite); white-space: nowrap; }
+  .tablewrap { overflow-x: auto; }
+  footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 4px 4px 0; flex-wrap: wrap; }
+  footer .st { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--granite); }
+  footer .st i { width: 8px; height: 8px; border-radius: 50%; background: var(--trail); display: inline-block; }
+  footer .st i.bad { background: var(--red); }
+  .btn { font: inherit; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; background: var(--forest); color: var(--limestone); border: 0; border-radius: 999px; padding: 12px 16px; min-height: 44px; text-decoration: none; display: inline-flex; align-items: center; }
+  .links { font-size: 11px; color: var(--granite); }
+  .links a { margin-right: 10px; }
+  .empty { padding: 28px 18px; text-align: center; color: var(--granite); font-size: 14px; line-height: 1.5; }
+  @media (min-width: 900px) {
+    .hero { padding: 36px 32px 28px; }
+    main { grid-template-columns: 3fr 2fr; padding: 24px 32px 40px; }
+    .span2 { grid-column: 1 / -1; }
+    .col-a { grid-column: 1; }
+    .col-b { grid-column: 2; }
+  }
+</style>
+</head>
+<body>
+<header class="hero">
+  <svg class="topo" aria-hidden="true" viewBox="0 0 1200 320" preserveAspectRatio="none" fill="none" stroke="#F4F0E8" stroke-width="1">
+    <path d="M-20 60 C 200 20, 400 110, 650 70 S 1100 40, 1240 90"/>
+    <path d="M-20 100 C 220 60, 420 150, 670 110 S 1120 80, 1260 130"/>
+    <path d="M-20 140 C 240 100, 440 190, 690 150 S 1140 120, 1280 170"/>
+    <path d="M-20 180 C 260 140, 460 230, 710 190 S 1160 160, 1300 210"/>
+    <path d="M-20 220 C 280 180, 480 270, 730 230 S 1180 200, 1320 250"/>
+    <path d="M-20 260 C 300 220, 500 310, 750 270 S 1200 240, 1340 290"/>
+  </svg>
+  <div class="wrap inner">
+    <div class="row">
+      <div class="brand"><span class="mark" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="#16221C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12 L6 5 L9 10 L11 7 L14 12"/></svg></span><span>R2 Waiting Room</span></div>
+      <span class="pill muted" id="pill">Loading</span>
+    </div>
+    <div>
+      <div class="eyebrow" id="eyebrow">&nbsp;</div>
+      <h1 id="title">Your R2</h1>
+      <p class="sub" id="subtitle">&nbsp;</p>
+    </div>
+    <div class="window" id="window" hidden>
+      <span class="eyebrow">Rivian's window</span>
+      <span class="big" id="windowText"></span>
+      <span class="note" id="windowNote"></span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+  <div class="span2" id="banners"></div>
+  <div class="span2 empty" id="empty" hidden>No data yet. Run the <a id="emptyLink" href="#">Poll Rivian</a> workflow (or run it with the sample order ticked to preview the dashboard), then reload.</div>
+
+  <div class="col-a" id="colA" style="display:flex;flex-direction:column;gap:16px" hidden>
+    <div class="card callout" id="next"></div>
+    <div class="tiles" id="tiles"></div>
+    <div class="card">
+      <div class="head"><h2>Fulfillment ladder</h2><span class="label" id="ladderCount"></span></div>
+      <div class="ladder" id="ladder"></div>
+    </div>
+    <div class="card">
+      <div class="head"><h2>Purchase steps</h2><span class="label" id="stepsCount"></span></div>
+      <div class="chips" id="steps"></div>
+      <span class="s" style="font-size:11px;color:var(--granite)">Locked steps unlock when Rivian moves the order. The first to watch is Title and reg.</span>
+    </div>
+  </div>
+
+  <div class="col-b" id="colB" style="display:flex;flex-direction:column;gap:16px" hidden>
+    <div class="card">
+      <div class="head"><h2>What moved</h2><span class="label" id="fieldsWatched"></span></div>
+      <div class="feed" id="feed"></div>
+    </div>
+    <div class="card">
+      <div class="head"><h2>Watch list</h2><span class="label">Alert on any change</span></div>
+      <div class="tablewrap"><table><thead><tr><th>Field</th><th>Now</th><th class="expcol">Expected next</th></tr></thead><tbody id="watch"></tbody></table></div>
+    </div>
+    <div class="card" id="buildCard" hidden>
+      <div class="head"><h2>Build dates</h2><span class="label">From Rivian's vehicle record</span></div>
+      <div class="tablewrap"><table><tbody id="buildDates"></tbody></table></div>
+    </div>
+  </div>
+
+  <footer class="span2" id="footer" hidden>
+    <div class="st"><i id="dotStatus"></i><span id="pollLine"></span></div>
+    <div class="links"><a id="rawLink" href="data/latest.json">latest.json</a><a href="data/changes.json">changes.json</a><a href="data/rungs.json">rungs.json</a><a href="data/meta.json">meta.json</a></div>
+    <a class="btn" id="pollBtn" href="#" target="_blank" rel="noopener">Poll now</a>
+  </footer>
+</main>
+
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const bust = "?t=" + Date.now();
+  const repo = (() => {
+    const host = location.hostname, seg = location.pathname.split("/").filter(Boolean)[0];
+    if (host.endsWith(".github.io") && seg) return { owner: host.replace(".github.io", ""), name: seg };
+    return null;
+  })();
+  const actionsUrl = repo ? `https://github.com/${repo.owner}/${repo.name}/actions/workflows/poll.yml` : "#";
+  $("pollBtn").href = actionsUrl; $("emptyLink").href = actionsUrl;
+
+  const HUMAN = { PENDING_FULFILLMENT: "Pending fulfillment", READY_FOR_FULFILLMENT: "Ready for fulfillment", READY_FOR_NEXT_STEPS: "Ready for next steps", VEHICLE_DELIVERED: "Delivered", SOFT_LOCKED: "Soft locked", HARD_LOCKED: "Hard locked", ORDERED: "Ordered" };
+  const human = (s) => s == null ? "" : (HUMAN[s] || String(s).toLowerCase().replace(/_/g, " ").replace(/^\w/, c => c.toUpperCase()));
+  const fmtD = (iso) => { if (!iso) return ""; const d = new Date(iso); if (isNaN(d)) return String(iso); return d.toLocaleDateString(undefined, { month: "short", day: "numeric" }); };
+  const fmtDT = (iso) => { if (!iso) return ""; const d = new Date(iso); if (isNaN(d)) return String(iso); return d.toLocaleString(undefined, { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }); };
+  const days = (iso) => iso ? Math.floor((Date.now() - new Date(iso)) / 864e5) : null;
+  const mono = (v) => v === null || v === undefined ? "null" : (typeof v === "object" ? JSON.stringify(v) : String(v));
+  const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  async function load(name) { try { const r = await fetch(`data/${name}${bust}`, { cache: "no-store" }); if (!r.ok) return null; return await r.json(); } catch { return null; } }
+
+  const EXPECT = {
+    invitedToSelfConfirm: "true, with email",
+    configurationStatus: "hard lock (value unknown)",
+    vehicleId: "set, before VIN",
+    fulfillmentSummaryStatus: "READY_FOR_FULFILLMENT",
+    vin: "VIN near shipment",
+    isPreparingPurchase: "true; Title and reg unlocks",
+    "delivery.status": "INIT, then APPT_SCHEDULED",
+    windowText: "any change",
+  };
+
+  Promise.all([load("latest.json"), load("rungs.json"), load("changes.json"), load("meta.json")]).then(([latest, rungs, changes, meta]) => {
+    meta = meta || {};
+    const banners = [];
+    if (meta.auth_expired) banners.push(`<div class="banner red">Rivian session expired, polling paused. Run the <a href="${repo ? `https://github.com/${repo.owner}/${repo.name}/actions/workflows/login.yml` : '#'}" target="_blank" rel="noopener">Login workflow</a>: start, then finish with the code.</div>`);
+    if (meta.mode === "mock") banners.push(`<div class="banner sand">Showing the sample order (${esc(meta.fixture || "fixture")}), not yours. Sign in with the Login workflow, then run Poll Rivian.</div>`);
+    if (meta.errors && Object.keys(meta.errors).some(k => !k.endsWith(".note"))) banners.push(`<div class="banner sand">Some Rivian queries failed last poll: ${esc(Object.entries(meta.errors).filter(([k]) => !k.endsWith(".note")).map(([k, v]) => `${k}: ${v}`).join(" · "))}</div>`);
+    $("banners").innerHTML = banners.join("");
+
+    if (!latest || !rungs) { $("empty").hidden = false; $("pill").textContent = "No data"; return; }
+    $("colA").hidden = false; $("colB").hidden = false; $("footer").hidden = false;
+
+    // Hero
+    const v = latest.vehicle || {};
+    $("title").textContent = v.build || (v.model ? `Rivian ${v.model}` : "Your R2");
+    $("subtitle").textContent = [v.modelYear ? `MY${v.modelYear}` : null, v.exterior, v.interior, v.wheels, ...(v.packages || [])].filter(Boolean).join(" · ");
+    const d0 = days(latest.orderDate);
+    $("eyebrow").textContent = latest.orderDate ? `Preordered ${fmtD(latest.orderDate)}${d0 != null ? ` · day ${d0}` : ""}` : "Order";
+    $("pill").className = "pill"; $("pill").textContent = human(latest.fulfillmentSummaryStatus || latest.state || "Unknown");
+    if (latest.windowText) {
+      $("window").hidden = false; $("windowText").textContent = latest.windowText;
+      const chg = (changes || []).find(c => /garageEstimatedInvitedToSelfConfigureDate$/.test(c.path));
+      const cfgDays = days(latest.configurationDate || latest.agreementSignedAt);
+      $("windowNote").textContent = (chg ? `Changed ${fmtD(chg.seen_at)}` : "Unchanged since first seen") + (cfgDays != null ? ` · configured ${cfgDays} days ago` : "");
+    }
+
+    // Next
+    const nxt = meta.next || rungs.filter(r => !r.reached).slice(0, 2);
+    $("next").innerHTML = nxt.length ? `<span class="label">Watching for next</span><span class="what">${esc(nxt.map(n => n.name).join(" or "))}</span><span class="fields">${esc(nxt.map(n => n.field).join(" · "))}</span>` : `<span class="label">Done</span><span class="what">Delivered. Enjoy the R2.</span>`;
+
+    // Tiles
+    const reached = rungs.filter(r => r.reached).length;
+    const openSteps = (latest.steps || []).filter(s => s.locked === false && !s.hide);
+    $("tiles").innerHTML = [
+      ["Config", human(latest.configurationStatus) || "Unknown", fmtD(latest.configurationDate || latest.agreementSignedAt) || ""],
+      ["VIN", latest.vin ? "Assigned" : (latest.vehicleId ? "Build matched" : "Not yet"), latest.vin || ""],
+      ["Ladder", `${reached} of ${rungs.length}`, `${openSteps.length} step${openSteps.length === 1 ? "" : "s"} open`],
+    ].map(([l, val, s]) => `<div class="tile"><span class="label">${l}</span><span class="v">${esc(val)}</span><span class="s">${esc(s)}</span></div>`).join("");
+
+    // Ladder
+    const here = Math.max(0, ...rungs.filter(r => r.reached).map(r => r.rung));
+    $("ladderCount").textContent = `${reached} of ${rungs.length}`;
+    $("ladder").innerHTML = rungs.map(r => {
+      const cls = r.reached ? (r.rung === here && here < 9 ? "here" : "done") : "todo";
+      const when = r.reached ? (r.rung === here && here < 9 ? "You are here" : fmtD(r.reached_at)) : "Waiting";
+      const raw = `${r.field}: ${mono(r.value)}`;
+      const check = cls === "done" ? `<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="#F4F0E8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3 3 7-7"/></svg>` : "";
+      return `<div class="rung ${cls}"><span class="dot" aria-hidden="true">${check}</span><div class="body"><div class="row"><span class="name">${esc(r.name)}</span><span class="when">${esc(when)}</span></div><span class="raw">${esc(raw)}</span></div></div>`;
+    }).join("");
+
+    // Steps
+    const steps = (latest.steps || []).filter(s => s.key !== "delivery");
+    const locked = steps.filter(s => s.locked && !s.completed).length;
+    $("stepsCount").textContent = `${openSteps.length} open · ${locked} locked`;
+    $("steps").innerHTML = steps.map(s => {
+      const cls = s.hide ? "" : (s.completed ? "done" : (s.locked === false ? "open" : ""));
+      const suffix = s.hide ? " · hidden" : (s.completed ? " · done" : (s.locked === false ? " · open" : ""));
+      return `<span class="chip ${cls}" title="${esc(s.key)}: ${esc(mono(s.status))}">${esc(s.label || s.key)}${suffix}</span>`;
+    }).join("");
+
+    // Feed: changes newest first, then backfilled order-record events
+    const events = (changes || []).slice(0, 12).map(c => ({ when: c.seen_at, text: `${c.kind === "added" ? "Set" : c.kind === "removed" ? "Cleared" : "Changed"}: ${c.path.split(".").slice(-2).join(".")}`, meta: `${mono(c.old)} → ${mono(c.new)}` }));
+    if (meta.first_poll_at) events.push({ when: meta.first_poll_at, text: "Baseline captured", meta: `${meta.fields_watched || "?"} fields watched · from first poll` });
+    if (latest.agreementSignedAt || latest.configurationDate) events.push({ when: latest.configurationDate || latest.agreementSignedAt, text: "Configuration locked, agreement signed", meta: `${mono(latest.configurationStatus)} · from order record` });
+    if (latest.orderDate) events.push({ when: latest.orderDate, text: "Preorder placed", meta: `${mono(latest.state)} · from order record` });
+    events.sort((a, b) => new Date(b.when) - new Date(a.when));
+    $("fieldsWatched").textContent = meta.fields_watched ? `${meta.fields_watched} fields watched` : "";
+    $("feed").innerHTML = events.map(e => `<div class="item"><span class="d">${esc(fmtD(e.when))}</span><div class="t"><span>${esc(e.text)}</span><span class="m">${esc(e.meta)}</span></div></div>`).join("") || `<div class="empty">Nothing yet.</div>`;
+
+    // Watch list
+    const rows = [
+      ["invitedToSelfConfirm", latest.invitedToSelfConfirm],
+      ["configurationStatus", latest.configurationStatus],
+      ["vehicleId", latest.vehicleId],
+      ["fulfillmentSummaryStatus", latest.fulfillmentSummaryStatus],
+      ["vin", latest.vin],
+      ["isPreparingPurchase", latest.isPreparingPurchase],
+      ["delivery.status", latest.delivery && latest.delivery.status],
+      ["windowText", latest.windowText],
+    ];
+    $("watch").innerHTML = rows.map(([f, val]) => `<tr><td class="mono">${esc(f)}</td><td class="mono" style="color:${val == null || val === false ? 'var(--mute)' : 'var(--trail)'}">${esc(mono(val))}<div class="exp">next: ${esc(EXPECT[f] || "")}</div></td><td class="expcol" style="color:var(--granite)">${esc(EXPECT[f] || "")}</td></tr>`).join("");
+
+    // Build dates (only when Rivian has a vehicle record)
+    const bd = latest.buildDates || {};
+    const bdRows = Object.entries(bd).filter(([, val]) => val);
+    if (bdRows.length) { $("buildCard").hidden = false; $("buildDates").innerHTML = bdRows.map(([k, val]) => `<tr><td class="mono">${esc(k)}</td><td class="r">${esc(fmtD(val))}</td></tr>`).join(""); }
+
+    // Footer
+    const last = meta.last_poll_at, next = last ? new Date(new Date(last).getTime() + (meta.poll_interval_min || 240) * 60000) : null;
+    const sess = meta.session_created_at ? days(meta.session_created_at) : null;
+    $("dotStatus").className = meta.ok === false ? "bad" : "";
+    $("pollLine").textContent = [last ? `Polled ${fmtDT(last)}` : "Never polled", next ? `next ${fmtDT(next.toISOString())}` : null, sess != null ? `session ${sess} d old` : null].filter(Boolean).join(" · ");
+  });
+})();
+</script>
+</body>
+</html>

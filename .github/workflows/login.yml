@@ -1,0 +1,64 @@
+name: Login to Rivian
+
+on:
+  workflow_dispatch:
+    inputs:
+      step:
+        description: "start = Rivian sends you a code. finish = enter the code."
+        type: choice
+        options: [start, finish]
+        default: start
+      code:
+        description: "6-digit code (finish only)"
+        required: false
+        default: ""
+
+concurrency:
+  group: r2wr-state
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  login:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Login (${{ inputs.step }})
+        env:
+          SESSION_KEY: ${{ secrets.SESSION_KEY }}
+          RIVIAN_EMAIL: ${{ secrets.RIVIAN_EMAIL }}
+          RIVIAN_PASSWORD: ${{ secrets.RIVIAN_PASSWORD }}
+        run: python -m app.login ${{ inputs.step }} --code "${{ inputs.code }}"
+
+      - name: First poll after sign-in
+        if: inputs.step == 'finish'
+        continue-on-error: true
+        env:
+          SESSION_KEY: ${{ secrets.SESSION_KEY }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          APPRISE_URL: ${{ secrets.APPRISE_URL }}
+        run: python -m app.poller
+
+      - name: Commit state
+        run: |
+          git config user.name "r2-waiting-room[bot]"
+          git config user.email "r2-waiting-room@users.noreply.github.com"
+          git add -A state docs/data
+          if git diff --cached --quiet; then
+            echo "nothing changed"
+          else
+            git commit -m "login: ${{ inputs.step }} $(date -u +%Y-%m-%dT%H:%MZ)"
+            git pull --rebase --autostash origin ${{ github.ref_name }}
+            git push
+          fi
