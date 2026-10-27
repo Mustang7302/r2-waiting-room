@@ -1,20 +1,23 @@
 {
-  "mode": "mock",
-  "fixture": "order.pending_fulfillment",
+  "mode": "live",
+  "fixture": null,
   "first_poll_at": "2026-10-27T01:51:09Z",
-  "last_poll_at": "2026-10-27T01:51:09Z",
+  "last_poll_at": "2026-10-27T02:08:31Z",
   "ok": true,
   "auth_expired": false,
-  "duration_s": 0.0,
+  "duration_s": 17.65,
   "endpoints": {
     "vehicleOrders": "ok",
     "order": "ok",
-    "transactionStatus": "ok",
+    "transactionStatus": "empty",
     "delivery": "ok",
     "userInfo": "ok"
   },
-  "errors": {},
-  "fields_watched": 653,
+  "errors": {
+    "order.note": "extended order query rejected, using core: order: Cannot query field \"garageLeaseStatus\" on type \"Order\".; Cannot query field \"garageEstimatedInvitedToSelfConfigureDate\" on type \"Order\".; Cannot query field \"garageInitialAgreementSignedAt\" on type \"Order\".; Cannot query field \"consumerStatuses\" on type \"Order\".",
+    "transactionStatus": "transactionStatus: HTTP 503"
+  },
+  "fields_watched": 197,
   "changes_this_poll": 0,
   "alertable_this_poll": 0,
   "noise_this_poll": 0,
@@ -31,6 +34,6 @@
       "field": "vehicleId / configurationStatus"
     }
   ],
-  "session_created_at": null,
+  "session_created_at": "2026-10-27T02:08:31Z",
   "poll_interval_min": 240
 }
