@@ -154,7 +154,7 @@
       <div class="head"><h2>Fulfillment ladder</h2><span class="label" id="ladderCount"></span></div>
       <div class="ladder" id="ladder"></div>
     </div>
-    <div class="card">
+    <div class="card" id="stepsCard">
       <div class="head"><h2>Purchase steps</h2><span class="label" id="stepsCount"></span></div>
       <div class="chips" id="steps"></div>
       <span class="hint" id="stepsHint"></span>
@@ -222,7 +222,7 @@
     1: { done: (r) => `Placed ${fmtD(r.reached_at)}`, todo: () => "" },
     2: { done: (r, l) => `${human(l.configurationStatus) || "Locked"}${r.reached_at ? ` on ${fmtD(r.reached_at)}` : ""}`, todo: () => "You lock your build on rivian.com" },
     3: { done: (r, l) => `Waiting for Rivian to match a build. Status: ${human(l.fulfillmentSummaryStatus)}`, todo: () => "After you lock your build" },
-    4: { done: (r) => `Rivian asked you to confirm your configuration${r.reached_at ? ` on ${fmtD(r.reached_at)}` : ""}`, todo: () => "Rivian emails you to confirm your build before assigning one" },
+    4: { done: (r) => `Rivian asked you to reconfirm your configuration${r.reached_at ? ` on ${fmtD(r.reached_at)}` : ""}`, todo: () => "R1 owners were emailed to reconfirm their build right before a vehicle was assigned; may not happen on R2" },
     5: { done: (r) => `A vehicle has been assigned to your order${r.reached_at ? ` (${fmtD(r.reached_at)})` : ""}`, todo: () => "Your configuration hard-locks and a vehicle ID appears" },
     6: { done: (r, l) => `VIN ${l.vin || "assigned"}${r.reached_at ? ` · ${fmtD(r.reached_at)}` : ""}`, todo: () => "Usually close to the vehicle shipping" },
     7: { done: (r) => `Rivian opened the purchase steps${r.reached_at ? ` on ${fmtD(r.reached_at)}` : ""}`, todo: () => "Title, insurance, payment and the rest unlock" },
@@ -231,7 +231,7 @@
   };
 
   const WATCH = [
-    ["Confirmation invite", "invitedToSelfConfirm", (l) => l.invitedToSelfConfirm, "Rivian asks you to confirm your build"],
+    ["Reconfirm request", "invitedToSelfConfirm", (l) => l.invitedToSelfConfirm, "Rivian may ask you to reconfirm your build right before matching one (seen on R1; unverified on R2)", "Not asked"],
     ["Configuration lock", "configurationStatus", (l) => l.configurationStatus, "Hard lock when a build is matched"],
     ["Build assignment", "vehicleId", (l) => l.vehicleId ? "Assigned" : null, "A vehicle ID appears before the VIN"],
     ["Fulfillment status", "fulfillmentSummaryStatus", (l) => l.fulfillmentSummaryStatus, "Ready for fulfillment, then ready for next steps"],
@@ -241,7 +241,7 @@
   ];
 
   const PATH_LABEL = [
-    [/configurationStatus$/, "Configuration lock"], [/fulfillmentSummaryStatus$/, "Fulfillment status"], [/invitedToSelfConfirm$/, "Confirmation invite"],
+    [/configurationStatus$/, "Configuration lock"], [/fulfillmentSummaryStatus$/, "Fulfillment status"], [/invitedToSelfConfirm$/, "Reconfirm request"],
     [/vehicleId$/, "Build assignment"], [/\.vin$|vehicleVIN$/, "VIN"], [/isPreparingPurchase$/, "Purchase phase"], [/delivery\.status$/, "Delivery"],
     [/appointmentDetails\./, "Delivery appointment"], [/plannedBuildDate$/, "Planned build date"], [/expectedBuildDate$/, "Expected build date"],
     [/actualGeneralAssemblyDate$/, "Assembly date"], [/steps\.([A-Za-z]+)\.locked$/, (m) => `${m[1]} step lock`], [/steps\.([A-Za-z]+)\.completed$/, (m) => `${m[1]} step completed`],
@@ -262,7 +262,8 @@
     const banners = [];
     if (meta.auth_expired) banners.push(`<div class="banner red"><span>Rivian signed this tracker out (it happens about weekly). Run the <a href="${wf('login.yml')}" target="_blank" rel="noopener">Login workflow</a>: start, then finish with the code. Polling resumes on its own.</span></div>`);
     if (meta.mode === "mock") banners.push(`<div class="banner sand"><span>This is the sample order, not yours. Sign in with the <a href="${wf('login.yml')}" target="_blank" rel="noopener">Login workflow</a>, then run Poll Rivian.</span></div>`);
-    const errs = Object.entries(meta.errors || {}).filter(([k]) => !k.endsWith(".note"));
+    const rungNow = meta.rung || 0;
+    const errs = Object.entries(meta.errors || {}).filter(([k]) => !k.endsWith(".note") && !(k === "transactionStatus" && rungNow < 5));
     if (errs.length) banners.push(`<div class="banner sand"><span>${esc(errs.map(([k, v]) => ERROR_TEXT(k, v)).join(" "))}</span></div>`);
     $("banners").innerHTML = banners.join("");
 
@@ -314,7 +315,9 @@
     }).join("");
 
     // Steps
-    if (!steps.length) {
+    if (here < 5) {
+      $("stepsCard").hidden = true;
+    } else if (!steps.length) {
       $("stepsCount").textContent = "";
       $("steps").innerHTML = "";
       $("stepsHint").textContent = meta.errors && meta.errors.transactionStatus ? "Rivian's purchase-steps service didn't answer this poll. The steps come back when it does." : "Rivian hasn't returned purchase steps for this order yet.";
@@ -343,10 +346,10 @@
     $("feed").innerHTML = events.map(e => `<div class="item"><span class="d">${esc(fmtD(e.when))}</span><div class="t"><span>${esc(e.text)}</span>${e.meta ? `<span class="${e.raw ? 'raw' : 'm'}">${esc(e.meta)}</span>` : ""}</div></div>`).join("") || `<div class="empty">Nothing yet.</div>`;
 
     // Watch list
-    $("watch").innerHTML = WATCH.map(([label, field, get, expect]) => {
+    $("watch").innerHTML = WATCH.map(([label, field, get, expect, offText]) => {
       const val = get(latest);
       const on = !(val === null || val === undefined || val === false || val === "");
-      return `<div class="wrow"><div><div class="wf">${esc(label)}</div><div class="we">Next: ${esc(expect)}</div><span class="raw">${esc(field)}</span></div><div><div class="wn ${on ? 'on' : 'off'}">${esc(friendlyVal(val))}</div><span class="raw">${esc(mono(val))}</span></div></div>`;
+      return `<div class="wrow"><div><div class="wf">${esc(label)}</div><div class="we">Next: ${esc(expect)}</div><span class="raw">${esc(field)}</span></div><div><div class="wn ${on ? 'on' : 'off'}">${esc(on ? friendlyVal(val) : (offText || "Not yet"))}</div><span class="raw">${esc(mono(val))}</span></div></div>`;
     }).join("");
 
     // Build dates

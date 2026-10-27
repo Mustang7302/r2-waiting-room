@@ -13,7 +13,7 @@ RUNG_NAMES = {
     1: "Preordered",
     2: "Configured",
     3: "In the queue",
-    4: "Confirm invite",
+    4: "Reconfirm request",
     5: "Build matched",
     6: "VIN assigned",
     7: "Purchase opens",
