@@ -78,7 +78,7 @@ The **fulfillment ladder** has nine rungs. Each is mapped to raw Rivian fields; 
 | 1 Preordered | `state == ORDERED` |
 | 2 Configured | `configurationStatus` is set (SOFT_LOCKED after you lock your build) |
 | 3 In the queue | `fulfillmentSummaryStatus == PENDING_FULFILLMENT` |
-| 4 Confirm invite | `invitedToSelfConfirm` becomes true |
+| 4 Invited to order | `invitedToSelfConfigure` or `invitedToSelfConfirm` becomes true |
 | 5 Build matched | `vehicleId` appears, or `configurationStatus` is anything other than SOFT_LOCKED, or a `plannedBuildDate` appears |
 | 6 VIN assigned | `vin` appears, or `fulfillmentSummaryStatus == READY_FOR_FULFILLMENT` |
 | 7 Purchase opens | `isPreparingPurchase` becomes true, or the Title and reg step unlocks |

@@ -222,7 +222,7 @@
     1: { done: (r) => `Placed ${fmtD(r.reached_at)}`, todo: () => "" },
     2: { done: (r, l) => `${human(l.configurationStatus) || "Locked"}${r.reached_at ? ` on ${fmtD(r.reached_at)}` : ""}`, todo: () => "You lock your build on rivian.com" },
     3: { done: (r, l) => `Waiting for Rivian to match a build. Status: ${human(l.fulfillmentSummaryStatus)}`, todo: () => "After you lock your build" },
-    4: { done: (r) => `Rivian asked you to reconfirm your configuration${r.reached_at ? ` on ${fmtD(r.reached_at)}` : ""}`, todo: () => "R1 owners were emailed to reconfirm their build right before a vehicle was assigned; may not happen on R2" },
+    4: { done: (r) => `Rivian invited you to order${r.reached_at ? ` on ${fmtD(r.reached_at)}` : ""}`, todo: () => "Rivian invites you to place your order when your build slot comes up" },
     5: { done: (r) => `A vehicle has been assigned to your order${r.reached_at ? ` (${fmtD(r.reached_at)})` : ""}`, todo: () => "Your configuration hard-locks and a vehicle ID appears" },
     6: { done: (r, l) => `VIN ${l.vin || "assigned"}${r.reached_at ? ` · ${fmtD(r.reached_at)}` : ""}`, todo: () => "Usually close to the vehicle shipping" },
     7: { done: (r) => `Rivian opened the purchase steps${r.reached_at ? ` on ${fmtD(r.reached_at)}` : ""}`, todo: () => "Title, insurance, payment and the rest unlock" },
@@ -231,7 +231,7 @@
   };
 
   const WATCH = [
-    ["Reconfirm request", "invitedToSelfConfirm", (l) => l.invitedToSelfConfirm, "Rivian may ask you to reconfirm your build right before matching one (seen on R1; unverified on R2)", "Not asked"],
+    ["Invite to order", "invitedToSelfConfigure · invitedToSelfConfirm", (l) => (l.invitedToSelfConfigure || l.invitedToSelfConfirm) ? "Invited" : null, "Rivian invites you to place your order when your build slot comes up", "Not yet"],
     ["Configuration lock", "configurationStatus", (l) => l.configurationStatus, "Hard lock when a build is matched"],
     ["Build assignment", "vehicleId", (l) => l.vehicleId ? "Assigned" : null, "A vehicle ID appears before the VIN"],
     ["Fulfillment status", "fulfillmentSummaryStatus", (l) => l.fulfillmentSummaryStatus, "Ready for fulfillment, then ready for next steps"],
@@ -241,7 +241,7 @@
   ];
 
   const PATH_LABEL = [
-    [/configurationStatus$/, "Configuration lock"], [/fulfillmentSummaryStatus$/, "Fulfillment status"], [/invitedToSelfConfirm$/, "Reconfirm request"],
+    [/configurationStatus$/, "Configuration lock"], [/fulfillmentSummaryStatus$/, "Fulfillment status"], [/invitedToSelfConfirm$/, "Invite to order"], [/invitedToSelfConfigure$/, "Invite to order"],
     [/vehicleId$/, "Build assignment"], [/\.vin$|vehicleVIN$/, "VIN"], [/isPreparingPurchase$/, "Purchase phase"], [/delivery\.status$/, "Delivery"],
     [/appointmentDetails\./, "Delivery appointment"], [/plannedBuildDate$/, "Planned build date"], [/expectedBuildDate$/, "Expected build date"],
     [/actualGeneralAssemblyDate$/, "Assembly date"], [/steps\.([A-Za-z]+)\.locked$/, (m) => `${m[1]} step lock`], [/steps\.([A-Za-z]+)\.completed$/, (m) => `${m[1]} step completed`],
@@ -289,9 +289,9 @@
     const NEXT = {
       0: ["Lock your build", "Configure and lock your R2 on rivian.com to enter the queue.", "configurationStatus"],
       1: ["Lock your build", "Configure and lock your R2 on rivian.com to enter the queue.", "configurationStatus"],
-      2: ["Production signals", "A hard lock on your configuration, a vehicle ID, a planned build date, or the fulfillment status moving off Pending. Any of these means Rivian is starting on your R2.", "configurationStatus · vehicleId · plannedBuildDate · fulfillmentSummaryStatus"],
-      3: ["Production signals", "A hard lock on your configuration, a vehicle ID, a planned build date, or the fulfillment status moving off Pending. Any of these means Rivian is starting on your R2.", "configurationStatus · vehicleId · plannedBuildDate · fulfillmentSummaryStatus"],
-      4: ["Production signals", "A hard lock on your configuration, a vehicle ID, or a planned build date. Rivian asked you to reconfirm, which R1 owners saw right before a build was assigned.", "configurationStatus · vehicleId · plannedBuildDate"],
+      2: ["Invite and production signals", "Your invite to order, then a hard lock on your configuration, a vehicle ID, a planned build date, or the fulfillment status moving off Pending. Any of these means Rivian is starting on your R2.", "invitedToSelfConfigure · configurationStatus · vehicleId · plannedBuildDate · fulfillmentSummaryStatus"],
+      3: ["Invite and production signals", "Your invite to order, then a hard lock on your configuration, a vehicle ID, a planned build date, or the fulfillment status moving off Pending. Any of these means Rivian is starting on your R2.", "invitedToSelfConfigure · configurationStatus · vehicleId · plannedBuildDate · fulfillmentSummaryStatus"],
+      4: ["Production signals", "A hard lock on your configuration, a vehicle ID, or a planned build date. You have your invite; Rivian is matching a build.", "configurationStatus · vehicleId · plannedBuildDate"],
       5: ["VIN and build dates", "A VIN, an assembly date, and the fulfillment status reaching Ready for fulfillment.", "vin · actualGeneralAssemblyDate · fulfillmentSummaryStatus"],
       6: ["Purchase steps opening", "Rivian unlocks title, insurance, payment and the rest once the vehicle is on its way.", "isPreparingPurchase · steps.titleAndReg.locked"],
       7: ["Delivery scheduling", "A delivery record and an appointment window.", "delivery.status · appointmentDetails"],

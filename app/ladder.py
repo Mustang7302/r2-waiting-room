@@ -13,7 +13,7 @@ RUNG_NAMES = {
     1: "Preordered",
     2: "Configured",
     3: "In the queue",
-    4: "Reconfirm request",
+    4: "Invited to order",
     5: "Build matched",
     6: "VIN assigned",
     7: "Purchase opens",
@@ -25,7 +25,7 @@ RUNG_FIELDS = {
     1: "state",
     2: "configurationStatus",
     3: "fulfillmentSummaryStatus",
-    4: "invitedToSelfConfirm",
+    4: "invitedToSelfConfigure / invitedToSelfConfirm",
     5: "vehicleId / configurationStatus",
     6: "vin / fulfillmentSummaryStatus",
     7: "isPreparingPurchase / steps.titleAndReg.locked",
@@ -58,8 +58,10 @@ RULES: list[Rule] = [
          lambda f: f.get("configurationDate") or f.get("agreementSignedAt"), lambda f: f.get("configurationStatus")),
     Rule(3, lambda f: f.get("fulfillmentSummaryStatus") == "PENDING_FULFILLMENT",
          lambda f: None, lambda f: f.get("fulfillmentSummaryStatus")),
-    Rule(4, lambda f: _truthy(f.get("invitedToSelfConfirm")),
-         lambda f: None, lambda f: f.get("invitedToSelfConfirm")),
+    Rule(4, lambda f: _truthy(f.get("invitedToSelfConfigure")) or _truthy(f.get("invitedToSelfConfirm")),
+         lambda f: None,
+         lambda f: ("invitedToSelfConfigure" if _truthy(f.get("invitedToSelfConfigure")) else "invitedToSelfConfirm")
+         if (_truthy(f.get("invitedToSelfConfigure")) or _truthy(f.get("invitedToSelfConfirm"))) else None),
     Rule(5, lambda f: _truthy(f.get("vehicleId"))
          or (_truthy(f.get("configurationStatus")) and f.get("configurationStatus") != "SOFT_LOCKED")
          or _truthy((f.get("buildDates") or {}).get("plannedBuildDate")),
