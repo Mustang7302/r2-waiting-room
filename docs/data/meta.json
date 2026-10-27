@@ -2,10 +2,10 @@
   "mode": "live",
   "fixture": null,
   "first_poll_at": "2026-10-27T01:51:09Z",
-  "last_poll_at": "2026-10-27T02:21:47Z",
+  "last_poll_at": "2026-10-27T02:29:40Z",
   "ok": true,
   "auth_expired": false,
-  "duration_s": 17.68,
+  "duration_s": 17.47,
   "endpoints": {
     "vehicleOrders": "ok",
     "order": "ok",
@@ -18,15 +18,15 @@
     "transactionStatus": "t2d: transactionStatus: HTTP 503; gateway: transactionStatus: Error in GraphQL validation; Error in GraphQL validation"
   },
   "fields_watched": 205,
-  "changes_this_poll": 4,
-  "alertable_this_poll": 4,
+  "changes_this_poll": 2,
+  "alertable_this_poll": 2,
   "noise_this_poll": 0,
   "rung": 3,
   "next": [
     {
       "rung": 4,
-      "name": "Confirm invite",
-      "field": "invitedToSelfConfirm"
+      "name": "Invited to order",
+      "field": "invitedToSelfConfigure / invitedToSelfConfirm"
     },
     {
       "rung": 5,

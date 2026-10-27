@@ -28,8 +28,8 @@
   },
   {
     "rung": 4,
-    "name": "Confirm invite",
-    "field": "invitedToSelfConfirm",
+    "name": "Invited to order",
+    "field": "invitedToSelfConfigure / invitedToSelfConfirm",
     "reached": false,
     "reached_at": null,
     "source": null,
