@@ -165,7 +165,7 @@ def test_snapshot_has_no_pii(pending, vin):
         for bad in FORBIDDEN_VALUES + ["REDACTED"]:
             assert bad not in text, bad
     snap = public_snapshot(build_facts(vin))
-    assert snap["vin"] == "••••0000"
+    assert snap["vin"] == "7PDSGABA0SN000•••"
     assert snap["vehicleId"] == "set"
     assert public_snapshot(build_facts(vin), full_vin=True)["vin"] == "7PDSGABA0SN000000"
 
@@ -175,7 +175,7 @@ def test_changes_allowlist(pending, vin):
     pub = public_changes(changes)
     paths = {c["path"] for c in pub}
     assert "order.configurationStatus" in paths
-    assert "order.vin" in paths and next(c for c in pub if c["path"] == "order.vin")["new"].endswith("0000")
+    assert "order.vin" in paths and next(c for c in pub if c["path"] == "order.vin")["new"].endswith("\u2022\u2022\u2022") and not next(c for c in pub if c["path"] == "order.vin")["new"].endswith("000")
     assert "order.vehicleId" in paths and next(c for c in pub if c["path"] == "order.vehicleId")["new"] == "set"
     assert "delivery.status" in paths
     assert "delivery.deliveryAddress.city" not in paths

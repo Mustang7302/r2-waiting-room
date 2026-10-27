@@ -3,9 +3,9 @@
 Two layers:
 1. `public_snapshot(facts)` builds latest.json from the facts dict only. Facts never
    carry names, addresses, phone, email, payments, or amounts, so this is an allowlist
-   by construction. VIN is cut to its last 4 unless settings opt into the full VIN.
+   by construction. VIN has its last 3 characters hidden unless settings opt into the full VIN.
 2. `public_changes(changes)` keeps only change rows whose path matches an allowlisted
-   pattern, with values transformed the same way (VIN last 4, ids masked).
+   pattern, with values transformed the same way (VIN with its last 3 hidden, ids masked).
 """
 
 from __future__ import annotations
@@ -44,9 +44,10 @@ _BRACKET_ID = re.compile(r"\[([^\]]+)\]")
 
 
 def mask_vin(v: Any, full: bool = False) -> Any:
+    """Default hides the last 3 characters of the serial; showing the last 4 alone would still identify the vehicle."""
     if not isinstance(v, str) or not v:
         return v
-    return v if full else "••••" + v[-4:]
+    return v if full else v[:-3] + "•••"
 
 
 def mask_id(v: Any) -> Any:

@@ -63,9 +63,9 @@ Your personal details never appear in the repo in plain text. See [Privacy](#pri
 
 ### Privacy, in plain terms
 
-The dashboard and the repo are public, but the only things ever written in plain text are order status words, dates, your model and options, the last 4 of your VIN, and delivery appointment times. Your name, address, phone, email, payments, and the full raw data are either never written or written encrypted with your secret key (`state/*.enc`). The sanitizer is an allowlist (`app/sanitize.py`): anything not explicitly listed is dropped, and the poller refuses to publish a file that contains an address, email, or payment field.
+The dashboard and the repo are public, but the only things ever written in plain text are order status words, dates, your model and options, your VIN with its last 3 characters hidden, and delivery appointment times. Your name, address, phone, email, payments, and the full raw data are either never written or written encrypted with your secret key (`state/*.enc`). The sanitizer is an allowlist (`app/sanitize.py`): anything not explicitly listed is dropped, and the poller refuses to publish a file that contains an address, email, or payment field.
 
-Want the full VIN on your dashboard? Copy `settings.example.json` to `settings.json` and set `"full_vin": true`.
+Want the full VIN on your dashboard? Run the **Settings** workflow under Actions and choose "show".
 
 ---
 

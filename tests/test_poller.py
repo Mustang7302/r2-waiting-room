@@ -115,7 +115,7 @@ def test_public_files_never_contain_pii(repo):
         poller.run(mock=True, fixture=fx, notify=False)
     for name in ("latest.json", "changes.json", "rungs.json", "meta.json"):
         text = (root / "docs" / "data" / name).read_text()
-        for bad in ("REDACTED", "@", "line1", "postalCode", "last4", "amount", "7PDSGABA0SN000000"):
+        for bad in ("REDACTED", "@", "line1", "postalCode", "last4", "amount", "7PDSGABA0SN000000", "N000000"):
             assert bad not in text, f"{name} contains {bad}"
 
 

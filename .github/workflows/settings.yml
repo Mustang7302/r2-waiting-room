@@ -9,7 +9,7 @@ on:
         options: [keep, on, off]
         default: keep
       full_vin:
-        description: "Show the full VIN on the public dashboard (default is last 4 only)"
+        description: "Show the full VIN on the public dashboard (default hides the last 3 characters)"
         type: choice
         options: [keep, show, hide]
         default: keep

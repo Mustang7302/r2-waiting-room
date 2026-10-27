@@ -75,7 +75,7 @@ RULES: list[Rule] = [
          or (f.get("buildDates") or {}).get("plannedBuildDate")),
     Rule(6, lambda f: _truthy(f.get("vin")) or f.get("fulfillmentSummaryStatus") == "READY_FOR_FULFILLMENT",
          lambda f: None,
-         lambda f: (("vin ••••" + str(f["vin"])[-4:]) if _truthy(f.get("vin")) else f.get("fulfillmentSummaryStatus"))),
+         lambda f: (("vin " + str(f["vin"])[:-3] + "•••") if _truthy(f.get("vin")) else f.get("fulfillmentSummaryStatus"))),
     Rule(7, lambda f: f.get("isPreparingPurchase") is True or _step_locked(f, "titleAndReg") is False,
          lambda f: None, lambda f: f.get("isPreparingPurchase")),
     Rule(8, lambda f: (f.get("delivery") or {}).get("status") in ("APPT_SCHEDULED", "DELIVERY_ACCEPTED")
