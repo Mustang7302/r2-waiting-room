@@ -1,0 +1,83 @@
+[
+  {
+    "rung": 1,
+    "name": "Preordered",
+    "field": "state",
+    "reached": true,
+    "reached_at": "2026-03-08T02:42:10.515Z",
+    "source": "backfill",
+    "value": "ORDERED"
+  },
+  {
+    "rung": 2,
+    "name": "Configured",
+    "field": "configurationStatus",
+    "reached": true,
+    "reached_at": "2026-09-22T15:19:20.497Z",
+    "source": "backfill",
+    "value": "SOFT_LOCKED"
+  },
+  {
+    "rung": 3,
+    "name": "In the queue",
+    "field": "fulfillmentSummaryStatus",
+    "reached": true,
+    "reached_at": "2026-10-27T01:51:09Z",
+    "source": "first_poll",
+    "value": "PENDING_FULFILLMENT"
+  },
+  {
+    "rung": 4,
+    "name": "Confirm invite",
+    "field": "invitedToSelfConfirm",
+    "reached": false,
+    "reached_at": null,
+    "source": null,
+    "value": null
+  },
+  {
+    "rung": 5,
+    "name": "Build matched",
+    "field": "vehicleId / configurationStatus",
+    "reached": false,
+    "reached_at": null,
+    "source": null,
+    "value": null
+  },
+  {
+    "rung": 6,
+    "name": "VIN assigned",
+    "field": "vin / fulfillmentSummaryStatus",
+    "reached": false,
+    "reached_at": null,
+    "source": null,
+    "value": null
+  },
+  {
+    "rung": 7,
+    "name": "Purchase opens",
+    "field": "isPreparingPurchase / steps.titleAndReg.locked",
+    "reached": false,
+    "reached_at": null,
+    "source": null,
+    "value": null
+  },
+  {
+    "rung": 8,
+    "name": "Delivery set",
+    "field": "delivery.status",
+    "reached": false,
+    "reached_at": null,
+    "source": null,
+    "value": null
+  },
+  {
+    "rung": 9,
+    "name": "Delivered",
+    "field": "fulfillmentSummaryStatus",
+    "reached": false,
+    "reached_at": null,
+    "source": null,
+    "value": null
+  }
+]

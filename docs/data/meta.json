@@ -1,0 +1,36 @@
+{
+  "mode": "mock",
+  "fixture": "order.pending_fulfillment",
+  "first_poll_at": "2026-10-27T01:51:09Z",
+  "last_poll_at": "2026-10-27T01:51:09Z",
+  "ok": true,
+  "auth_expired": false,
+  "duration_s": 0.0,
+  "endpoints": {
+    "vehicleOrders": "ok",
+    "order": "ok",
+    "transactionStatus": "ok",
+    "delivery": "ok",
+    "userInfo": "ok"
+  },
+  "errors": {},
+  "fields_watched": 653,
+  "changes_this_poll": 0,
+  "alertable_this_poll": 0,
+  "noise_this_poll": 0,
+  "rung": 3,
+  "next": [
+    {
+      "rung": 4,
+      "name": "Confirm invite",
+      "field": "invitedToSelfConfirm"
+    },
+    {
+      "rung": 5,
+      "name": "Build matched",
+      "field": "vehicleId / configurationStatus"
+    }
+  ],
+  "session_created_at": null,
+  "poll_interval_min": 240
+}
