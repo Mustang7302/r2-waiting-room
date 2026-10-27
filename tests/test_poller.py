@@ -50,7 +50,8 @@ def test_2_build_matched_advances_and_alerts(repo, monkeypatch):
     sent = []
     monkeypatch.setattr(poller, "send", lambda headline, body, priority="default", tags="": sent.append((headline, body, priority)) or True)
     assert poller.run(mock=True, fixture="order.pending_fulfillment", notify=True) == 0
-    assert sent == []
+    assert len(sent) == 1 and sent[0][0] == "Checked, no change" and sent[0][2] == "low"
+    sent.clear()
     assert poller.run(mock=True, fixture="order.build_matched", notify=True) == 0
     assert _read(root, "meta.json")["rung"] == 5
     changes = _read(root, "changes.json")
@@ -81,7 +82,7 @@ def test_6_noise_path_is_stored_not_alerted(repo, monkeypatch):
     poller.run(mock=True, fixture="noisy", notify=True)
     meta = _read(root, "meta.json")
     assert meta["changes_this_poll"] == 1 and meta["noise_this_poll"] == 1 and meta["alertable_this_poll"] == 0
-    assert sent == []
+    assert [a[0] for a in sent] == ["Checked, no change", "Checked, no change"]
 
 
 def test_4_auth_expired_path(repo, monkeypatch):
@@ -116,3 +117,13 @@ def test_public_files_never_contain_pii(repo):
         text = (root / "docs" / "data" / name).read_text()
         for bad in ("REDACTED", "@", "line1", "postalCode", "last4", "amount", "7PDSGABA0SN000000"):
             assert bad not in text, f"{name} contains {bad}"
+
+
+def test_stage_since_and_next_scheduled(repo):
+    root, poller = repo
+    poller.run(mock=True, fixture="order.pending_fulfillment", notify=False)
+    meta = _read(root, "meta.json")
+    assert meta["stage_since"] and meta["next_scheduled"] is None
+    poller.run(mock=True, fixture="order.build_matched", notify=False)
+    meta = _read(root, "meta.json")
+    assert meta["next_scheduled"] == {"label": "Planned build", "date": "2026-12-08", "field": "plannedBuildDate"}

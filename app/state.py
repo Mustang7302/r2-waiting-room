@@ -53,6 +53,7 @@ def settings() -> dict:
     """settings.json is optional; every key has a default."""
     s = read_json(SETTINGS, {}) or {}
     s.setdefault("full_vin", False)
+    s.setdefault("heartbeat", True)  # a quiet "checked, no change" push after every poll
     s.setdefault("noise", None)  # None = DEFAULT_NOISE from diff.py
     s.setdefault("order_id", None)  # None = first vehicle order from vehicleOrders
     return s

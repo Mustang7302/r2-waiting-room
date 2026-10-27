@@ -141,6 +141,10 @@ def run(mock: bool, fixture: str, notify: bool = True) -> int:
         "next": [{"rung": r["rung"], "name": r["name"], "field": r["field"]} for r in next_signals(rungs)],
         "session_created_at": _session_age(),
         "poll_interval_min": int(os.environ.get("POLL_INTERVAL_MIN", "240")),
+        "heartbeat": bool(cfg.get("heartbeat", True)),
+        "full_vin": bool(cfg.get("full_vin")),
+        "stage_since": _stage_since(rungs),
+        "next_scheduled": _next_scheduled(facts),
     }
 
     for obj in (snapshot, change_log, rungs, meta):
@@ -156,10 +160,73 @@ def run(mock: bool, fixture: str, notify: bool = True) -> int:
         crypto.write_enc(state.RAW_ENC, raw)
 
     log.info("rung %s; %d changes (%d alertable); errors=%s", rung_now, len(changes), len(alertable), errors or "none")
-    if notify and (pub_changes or newly):
-        headline, body, priority = format_changes(pub_changes, rung_now, newly, RUNG_NAMES)
-        send(headline, body, priority=priority, tags="truck" if newly else "")
+    if notify:
+        when = _local_time(now)
+        if pub_changes or newly:
+            headline, body, priority = format_changes(pub_changes, rung_now, newly, RUNG_NAMES)
+            send(headline, f"{when}\n{body}", priority=priority, tags="truck" if newly else "")
+        elif cfg.get("heartbeat", True):
+            stage = RUNG_NAMES.get(rung_now, "?")
+            since = meta["stage_since"]
+            days = _days_between(since, now) if since else None
+            parts = [f"Rung {rung_now} of {len(RUNG_NAMES)}: {stage}" + (f", {days} d at this stage" if days is not None else "")]
+            if meta["next_scheduled"]:
+                parts.append(f"{meta['next_scheduled']['label']} {meta['next_scheduled']['date']}")
+            parts.append(f"{meta['fields_watched']} fields compared, no change")
+            if errors and any(not k.endswith(".note") for k in errors):
+                parts.append("one Rivian service did not answer")
+            send("Checked, no change", f"{when}\n" + " · ".join(parts), priority="low", tags="white_check_mark")
     return 0
+
+
+def _local_time(iso: str) -> str:
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+
+    tz = os.environ.get("TZ", "America/New_York")
+    try:
+        d = datetime.fromisoformat(iso.replace("Z", "+00:00")).astimezone(ZoneInfo(tz))
+    except Exception:  # noqa: BLE001
+        return iso
+    return d.strftime("%a %b %d, %I:%M %p %Z").replace(" 0", " ")
+
+
+def _days_between(a_iso: str, b_iso: str) -> int | None:
+    from datetime import datetime
+
+    try:
+        a = datetime.fromisoformat(str(a_iso)[:19].replace("Z", "")).date()
+        b = datetime.fromisoformat(str(b_iso)[:19].replace("Z", "")).date()
+        return (b - a).days
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def _stage_since(rungs: list[dict]) -> str | None:
+    """Date the current rung was reached; falls back to the latest dated rung below it."""
+    reached = [r for r in rungs if r.get("reached")]
+    for r in sorted(reached, key=lambda r: -r["rung"]):
+        if r.get("reached_at"):
+            return r["reached_at"]
+    return None
+
+
+def _next_scheduled(facts: dict) -> dict | None:
+    """The nearest future date Rivian has put on the order, if any."""
+    cands = []
+    bd = facts.get("buildDates") or {}
+    for key, label in (("plannedBuildDate", "Planned build"), ("expectedBuildDate", "Expected build"),
+                       ("expectedGeneralAssemblyStartDate", "Assembly start"), ("actualGeneralAssemblyDate", "Assembly")):
+        if bd.get(key):
+            cands.append({"label": label, "date": str(bd[key])[:10], "field": key})
+    d = facts.get("delivery") or {}
+    if d.get("appointmentStart"):
+        cands.append({"label": "Delivery appointment", "date": str(d["appointmentStart"])[:10], "field": "delivery.appointmentDetails.startDateTime"})
+    if not cands:
+        return None
+    today = state.now_iso()[:10]
+    future = [c for c in cands if c["date"] >= today]
+    return min(future or cands, key=lambda c: c["date"])
 
 
 def _iter_leaves(obj: Any):

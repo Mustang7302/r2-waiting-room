@@ -47,7 +47,7 @@ Your personal details never appear in the repo in plain text. See [Privacy](#pri
 
 9. **First poll.** The `finish` step runs a poll for you. Open your dashboard address from step 2. You should see your R2 and the rung you are on. (If you want to see the dashboard before signing in, run **Poll Rivian** with "Use the sample order" ticked.)
 
-10. **Done.** It now checks every 4 hours on its own. When something moves you get a push on your phone and the dashboard updates. About once a week Rivian expires the session; you get a red push and an email from GitHub, and you repeat steps 7 and 8.
+10. **Done.** It now checks every 4 hours on its own. Every check sends a quiet "Checked, no change" push with the time and your current rung (turn that off with the **Settings** workflow under Actions, or the "Check-in pushes" switch at the bottom of the dashboard, which opens that workflow). When something moves you get a loud push and the dashboard updates. About once a week Rivian expires the session; you get a red push and an email from GitHub, and you repeat steps 7 and 8.
 
 ### If something goes wrong
 

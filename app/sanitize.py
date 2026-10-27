@@ -70,6 +70,8 @@ def _mask_path(path: str) -> str:
 def public_change(c: Change, full_vin: bool = False) -> dict | None:
     if not any(p.match(c.path) for p in _ALLOWED):
         return None
+    if c.old is None and c.new is None:  # a field that appeared or vanished while empty says nothing
+        return None
     old, new = c.old, c.new
     if _VIN_PATH.search(c.path):
         old, new = mask_vin(old, full_vin), mask_vin(new, full_vin)

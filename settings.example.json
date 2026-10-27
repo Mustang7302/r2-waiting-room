@@ -1,6 +1,7 @@
 {
   "_comment": "Copy to settings.json to override defaults. Every key is optional.",
   "full_vin": false,
+  "heartbeat": true,
   "order_id": null,
   "noise": [
     "offersByStore.*",

@@ -83,7 +83,13 @@
   .chip { font-size: 12px; font-weight: 600; padding: 7px 12px; border-radius: 999px; background: var(--page); color: var(--granite); border: 1px solid var(--sand); }
   .chip.open { background: var(--yellow-soft); color: var(--yellow-ink); border-color: transparent; font-weight: 700; }
   .chip.done { background: var(--trail-soft); color: var(--trail); border-color: transparent; font-weight: 700; }
-  .tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  @media (min-width: 600px) { .tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+  .switch { display: inline-flex; align-items: center; gap: 8px; font: inherit; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--granite); background: transparent; border: 1px solid var(--sand); border-radius: 999px; padding: 10px 14px; min-height: 44px; cursor: pointer; text-decoration: none; }
+  .switch i { width: 30px; height: 18px; border-radius: 999px; background: var(--sand); position: relative; display: inline-block; }
+  .switch i::after { content: ""; position: absolute; top: 3px; left: 3px; width: 12px; height: 12px; border-radius: 50%; background: var(--card); transition: left .15s; }
+  .switch.on i { background: var(--trail); }
+  .switch.on i::after { left: 15px; }
   .tile { background: var(--card); border: 1px solid var(--sand); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 4px; min-width: 0; box-shadow: var(--shadow); }
   .tile .v { font-size: 15px; font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .tile .s { font-size: 12px; color: var(--granite); }
@@ -179,6 +185,7 @@
   <footer class="span2" id="footer" hidden>
     <div class="st"><i id="dotStatus"></i><span id="pollLine"></span></div>
     <div class="links">
+      <a class="switch" id="hbToggle" href="#" target="_blank" rel="noopener" title="Opens the Settings workflow: pick on or off, then Run"><i aria-hidden="true"></i><span id="hbLabel">Check-in pushes</span></a>
       <button type="button" class="btn ghost" id="rawToggle">Show field names</button>
       <a class="btn" id="pollBtn" href="#" target="_blank" rel="noopener">Poll now</a>
     </div>
@@ -307,10 +314,14 @@
     const openSteps = steps.filter(s => s.locked === false && !s.hide);
     const here = Math.max(0, ...rungs.filter(r => r.reached).map(r => r.rung));
     const hereRung = rungs.find(r => r.rung === here);
+    const sinceDays = meta.stage_since ? days(meta.stage_since) : null;
+    const ns = meta.next_scheduled;
+    const nsDays = ns ? Math.ceil((new Date(ns.date + "T12:00:00") - Date.now()) / 864e5) : null;
     $("tiles").innerHTML = [
       ["Configuration", human(latest.configurationStatus) || "Not yet", fmtD(latest.configurationDate || latest.agreementSignedAt) || ""],
       ["VIN", latest.vin ? "Assigned" : (latest.vehicleId ? "Build matched" : "Not yet"), latest.vin || (latest.vehicleId ? "VIN comes next" : "")],
-      ["Progress", `Rung ${here} of ${rungs.length}`, hereRung ? hereRung.name : ""],
+      ["At this stage", sinceDays != null ? `${sinceDays} day${sinceDays === 1 ? "" : "s"}` : "—", hereRung ? `${hereRung.name}${meta.stage_since ? ` since ${fmtD(meta.stage_since)}` : ""}` : ""],
+      ["Next scheduled", ns ? (nsDays > 0 ? `In ${nsDays} day${nsDays === 1 ? "" : "s"}` : nsDays === 0 ? "Today" : `${-nsDays} day${nsDays === -1 ? "" : "s"} ago`) : "Nothing yet", ns ? `${ns.label} · ${fmtD(ns.date + "T12:00:00")}` : "Rivian hasn't set a build or delivery date"],
     ].map(([l, val, s]) => `<div class="tile"><span class="label">${l}</span><span class="v">${esc(val)}</span><span class="s">${esc(s)}</span></div>`).join("");
 
     // Ladder
@@ -367,6 +378,11 @@
     const bd = latest.buildDates || {};
     const bdRows = Object.entries(bd).filter(([, val]) => val);
     if (bdRows.length) { $("buildCard").hidden = false; $("buildDates").innerHTML = bdRows.map(([k, val]) => `<span class="k">${esc(pathLabel(k))}</span><span>${esc(fmtD(val))}</span>`).join(""); }
+
+    // Heartbeat switch: shows the current setting; changing it runs the Settings workflow (the page has no GitHub credentials).
+    $("hbToggle").href = wf("settings.yml");
+    $("hbToggle").classList.toggle("on", meta.heartbeat !== false);
+    $("hbLabel").textContent = `Check-in pushes ${meta.heartbeat === false ? "off" : "on"}`;
 
     // Footer
     const last = meta.last_poll_at, next = last ? new Date(new Date(last).getTime() + (meta.poll_interval_min || 240) * 60000) : null;
