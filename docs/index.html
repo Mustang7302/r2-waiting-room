@@ -283,11 +283,23 @@
       $("windowNote").textContent = chg ? `Changed ${fmtD(chg.seen_at)}` : "Unchanged since first seen";
     }
 
-    // Next
-    const nxt = meta.next || rungs.filter(r => !r.reached).slice(0, 2);
-    const nxtWhy = nxt.map(n => (RUNG_TEXT[n.rung] || {}).todo ? RUNG_TEXT[n.rung].todo() : "").filter(Boolean);
-    $("next").innerHTML = nxt.length
-      ? `<span class="label">Watching for next</span><span class="what">${esc(nxt.map(n => n.name).join(" or "))}</span><span class="why">${esc(nxtWhy.join(". "))}</span><span class="raw">${esc(nxt.map(n => n.field).join(" · "))}</span>`
+    // Next: what to watch for, by stage
+    const reachedRungs = rungs.filter(r => r.reached).map(r => r.rung);
+    const stage = reachedRungs.length ? Math.max(...reachedRungs) : 0;
+    const NEXT = {
+      0: ["Lock your build", "Configure and lock your R2 on rivian.com to enter the queue.", "configurationStatus"],
+      1: ["Lock your build", "Configure and lock your R2 on rivian.com to enter the queue.", "configurationStatus"],
+      2: ["Production signals", "A hard lock on your configuration, a vehicle ID, a planned build date, or the fulfillment status moving off Pending. Any of these means Rivian is starting on your R2.", "configurationStatus · vehicleId · plannedBuildDate · fulfillmentSummaryStatus"],
+      3: ["Production signals", "A hard lock on your configuration, a vehicle ID, a planned build date, or the fulfillment status moving off Pending. Any of these means Rivian is starting on your R2.", "configurationStatus · vehicleId · plannedBuildDate · fulfillmentSummaryStatus"],
+      4: ["Production signals", "A hard lock on your configuration, a vehicle ID, or a planned build date. Rivian asked you to reconfirm, which R1 owners saw right before a build was assigned.", "configurationStatus · vehicleId · plannedBuildDate"],
+      5: ["VIN and build dates", "A VIN, an assembly date, and the fulfillment status reaching Ready for fulfillment.", "vin · actualGeneralAssemblyDate · fulfillmentSummaryStatus"],
+      6: ["Purchase steps opening", "Rivian unlocks title, insurance, payment and the rest once the vehicle is on its way.", "isPreparingPurchase · steps.titleAndReg.locked"],
+      7: ["Delivery scheduling", "A delivery record and an appointment window.", "delivery.status · appointmentDetails"],
+      8: ["Delivery day", "Fulfillment status reaching Delivered.", "fulfillmentSummaryStatus"],
+    };
+    const n = NEXT[stage];
+    $("next").innerHTML = n
+      ? `<span class="label">Watching for</span><span class="what">${esc(n[0])}</span><span class="why">${esc(n[1])}</span><span class="raw">${esc(n[2])}</span>`
       : `<span class="label">Done</span><span class="what">Delivered. Enjoy the R2.</span>`;
 
     // Tiles
