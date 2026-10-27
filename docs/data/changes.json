@@ -1,1 +1,44 @@
-[]
+[
+  {
+    "path": "order.configurationStatus",
+    "old": null,
+    "new": "SOFT_LOCKED",
+    "kind": "added",
+    "seen_at": "2026-10-27T02:18:04Z"
+  },
+  {
+    "path": "order.fulfillmentSummaryStatus",
+    "old": null,
+    "new": "PENDING_FULFILLMENT",
+    "kind": "added",
+    "seen_at": "2026-10-27T02:18:04Z"
+  },
+  {
+    "path": "order.invitedToSelfConfigure",
+    "old": null,
+    "new": false,
+    "kind": "added",
+    "seen_at": "2026-10-27T02:18:04Z"
+  },
+  {
+    "path": "order.invitedToSelfConfirm",
+    "old": null,
+    "new": null,
+    "kind": "added",
+    "seen_at": "2026-10-27T02:18:04Z"
+  },
+  {
+    "path": "order.orderConfirmationType",
+    "old": null,
+    "new": "SELF_SERVE_LOCK",
+    "kind": "added",
+    "seen_at": "2026-10-27T02:18:04Z"
+  },
+  {
+    "path": "order.vehicleId",
+    "old": null,
+    "new": null,
+    "kind": "added",
+    "seen_at": "2026-10-27T02:18:04Z"
+  }
+]
