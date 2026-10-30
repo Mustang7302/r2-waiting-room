@@ -2,7 +2,7 @@
   "orderIdLast4": "0332",
   "state": "ORDERED",
   "configurationStatus": "SOFT_LOCKED",
-  "fulfillmentSummaryStatus": "PENDING_FULFILLMENT",
+  "fulfillmentSummaryStatus": "READY_FOR_FULFILLMENT",
   "orderConfirmationType": "SELF_SERVE_LOCK",
   "invitedToSelfConfirm": null,
   "invitedToSelfConfigure": false,
@@ -17,8 +17,8 @@
   "isConsumerFlowComplete": false,
   "steps": [],
   "delivery": {
-    "status": null,
-    "carrier": null,
+    "status": "INIT",
+    "carrier": "RIVIAN",
     "appointmentStart": null,
     "appointmentEnd": null,
     "timeZone": null

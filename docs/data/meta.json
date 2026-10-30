@@ -2,10 +2,10 @@
   "mode": "live",
   "fixture": null,
   "first_poll_at": "2026-10-27T01:51:09Z",
-  "last_poll_at": "2026-10-30T14:53:27Z",
+  "last_poll_at": "2026-10-30T20:28:49Z",
   "ok": true,
   "auth_expired": false,
-  "duration_s": 18.0,
+  "duration_s": 18.08,
   "endpoints": {
     "vehicleOrders": "ok",
     "order": "ok",
@@ -17,9 +17,9 @@
     "order.note": "schema rejected ['consumerStatuses', 'garageEstimatedInvitedToSelfConfigureDate', 'garageInitialAgreementSignedAt', 'garageLeaseStatus']; retried without them",
     "transactionStatus": "t2d: transactionStatus: HTTP 503; gateway: transactionStatus: Error in GraphQL validation; Error in GraphQL validation"
   },
-  "fields_watched": 209,
-  "changes_this_poll": 15,
-  "alertable_this_poll": 15,
+  "fields_watched": 220,
+  "changes_this_poll": 13,
+  "alertable_this_poll": 13,
   "noise_this_poll": 0,
   "rung": 6,
   "next": [

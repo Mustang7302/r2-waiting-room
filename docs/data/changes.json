@@ -1,5 +1,40 @@
 [
   {
+    "path": "delivery.carrier",
+    "old": null,
+    "new": "RIVIAN",
+    "kind": "added",
+    "seen_at": "2026-10-30T20:28:49Z"
+  },
+  {
+    "path": "delivery.status",
+    "old": null,
+    "new": "INIT",
+    "kind": "added",
+    "seen_at": "2026-10-30T20:28:49Z"
+  },
+  {
+    "path": "delivery.vehicleVIN",
+    "old": null,
+    "new": "7PD2EAAB9VN019•••",
+    "kind": "added",
+    "seen_at": "2026-10-30T20:28:49Z"
+  },
+  {
+    "path": "order.fulfillmentSummaryStatus",
+    "old": "PENDING_FULFILLMENT",
+    "new": "READY_FOR_FULFILLMENT",
+    "kind": "changed",
+    "seen_at": "2026-10-30T20:28:49Z"
+  },
+  {
+    "path": "vehicleOrders[0].fulfillmentSummaryStatus",
+    "old": "PENDING_FULFILLMENT",
+    "new": "READY_FOR_FULFILLMENT",
+    "kind": "changed",
+    "seen_at": "2026-10-30T20:28:49Z"
+  },
+  {
     "path": "order.vehicle.make",
     "old": null,
     "new": "RIVIAN",
