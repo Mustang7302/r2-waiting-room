@@ -1,5 +1,47 @@
 [
   {
+    "path": "order.vehicle.make",
+    "old": null,
+    "new": "RIVIAN",
+    "kind": "added",
+    "seen_at": "2026-10-30T14:53:27Z"
+  },
+  {
+    "path": "order.vehicle.model",
+    "old": null,
+    "new": "R2",
+    "kind": "added",
+    "seen_at": "2026-10-30T14:53:27Z"
+  },
+  {
+    "path": "order.vehicle.modelYear",
+    "old": null,
+    "new": 2027,
+    "kind": "added",
+    "seen_at": "2026-10-30T14:53:27Z"
+  },
+  {
+    "path": "order.vehicle.vehicleId",
+    "old": null,
+    "new": "set",
+    "kind": "added",
+    "seen_at": "2026-10-30T14:53:27Z"
+  },
+  {
+    "path": "order.vehicle.vin",
+    "old": null,
+    "new": "7PD2EAAB9VN019•••",
+    "kind": "added",
+    "seen_at": "2026-10-30T14:53:27Z"
+  },
+  {
+    "path": "order.vehicleId",
+    "old": null,
+    "new": "set",
+    "kind": "changed",
+    "seen_at": "2026-10-30T14:53:27Z"
+  },
+  {
     "path": "order.configurationStatus",
     "old": null,
     "new": "SOFT_LOCKED",

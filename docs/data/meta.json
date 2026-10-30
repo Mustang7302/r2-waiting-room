@@ -2,10 +2,10 @@
   "mode": "live",
   "fixture": null,
   "first_poll_at": "2026-10-27T01:51:09Z",
-  "last_poll_at": "2026-10-30T04:45:54Z",
+  "last_poll_at": "2026-10-30T14:53:27Z",
   "ok": true,
   "auth_expired": false,
-  "duration_s": 17.42,
+  "duration_s": 18.0,
   "endpoints": {
     "vehicleOrders": "ok",
     "order": "ok",
@@ -17,27 +17,27 @@
     "order.note": "schema rejected ['consumerStatuses', 'garageEstimatedInvitedToSelfConfigureDate', 'garageInitialAgreementSignedAt', 'garageLeaseStatus']; retried without them",
     "transactionStatus": "t2d: transactionStatus: HTTP 503; gateway: transactionStatus: Error in GraphQL validation; Error in GraphQL validation"
   },
-  "fields_watched": 205,
-  "changes_this_poll": 3,
-  "alertable_this_poll": 3,
+  "fields_watched": 209,
+  "changes_this_poll": 15,
+  "alertable_this_poll": 15,
   "noise_this_poll": 0,
-  "rung": 4,
+  "rung": 6,
   "next": [
     {
-      "rung": 5,
-      "name": "Build matched",
-      "field": "vehicleId / configurationStatus"
+      "rung": 7,
+      "name": "Purchase opens",
+      "field": "isPreparingPurchase / steps.titleAndReg.locked"
     },
     {
-      "rung": 6,
-      "name": "VIN assigned",
-      "field": "vin / fulfillmentSummaryStatus"
+      "rung": 8,
+      "name": "Delivery set",
+      "field": "delivery.status"
     }
   ],
   "session_created_at": "2026-10-27T02:08:31Z",
   "poll_interval_min": 240,
   "heartbeat": true,
   "full_vin": false,
-  "stage_since": "2026-10-27T01:51:09Z",
+  "stage_since": "2026-10-30T14:53:27Z",
   "next_scheduled": null
 }
