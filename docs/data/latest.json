@@ -17,11 +17,11 @@
   "isConsumerFlowComplete": false,
   "steps": [],
   "delivery": {
-    "status": "INIT",
+    "status": "APPT_SCHEDULED",
     "carrier": "RIVIAN",
-    "appointmentStart": null,
-    "appointmentEnd": null,
-    "timeZone": null
+    "appointmentStart": "2026-11-11T11:00:00",
+    "appointmentEnd": "2026-11-11T11:30:00",
+    "timeZone": "America/New_York"
   },
   "vehicle": {
     "model": "R2",
