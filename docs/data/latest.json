@@ -44,5 +44,63 @@
     "plannedBuildDate": null,
     "expectedGeneralAssemblyStartDate": null,
     "actualGeneralAssemblyDate": null
+  },
+  "telemetry": {
+    "lastSync": null,
+    "mileage": null,
+    "battery": null,
+    "distanceToEmpty": null,
+    "powerState": null,
+    "gear": null,
+    "chargerState": null,
+    "speed": null,
+    "otaVersion": null,
+    "otaStatus": null,
+    "locationKnown": false
+  },
+  "fulfillments": [
+    {
+      "status": "RESERVED",
+      "method": "THROW_IN",
+      "vendor": "RIVIAN",
+      "trackingStatus": null,
+      "trackingCarrier": null,
+      "shipDate": null,
+      "deliveredDate": null,
+      "serviceType": null,
+      "windowStart": null,
+      "windowEnd": null
+    },
+    {
+      "status": "RESERVED",
+      "method": "THROW_IN",
+      "vendor": "RIVIAN",
+      "trackingStatus": null,
+      "trackingCarrier": null,
+      "shipDate": null,
+      "deliveredDate": null,
+      "serviceType": null,
+      "windowStart": null,
+      "windowEnd": null
+    },
+    {
+      "status": "RESERVED",
+      "method": "THROW_IN",
+      "vendor": "RIVIAN",
+      "trackingStatus": null,
+      "trackingCarrier": null,
+      "shipDate": null,
+      "deliveredDate": null,
+      "serviceType": null,
+      "windowStart": null,
+      "windowEnd": null
+    }
+  ],
+  "pendingFulfillmentItems": 1,
+  "itemStates": {
+    "PROCSHQ0DS": null,
+    "PROCCTG7CO": null,
+    "PROC7DQTIG": null,
+    "R2": null
   }
 }
