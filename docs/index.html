@@ -176,6 +176,15 @@
       <div class="head"><h2>Watch list</h2><span class="label">Alerts on any change</span></div>
       <div class="watch" id="watch"></div>
     </div>
+    <div class="card" id="carCard" hidden>
+      <div class="head"><h2>Your vehicle</h2><span class="label">Live from the car</span></div>
+      <div class="kv" id="carKv"></div>
+      <span class="hint">Location is sent only to your private push channel, never to this page.</span>
+    </div>
+    <div class="card" id="transportCard" hidden>
+      <div class="head"><h2>Transport</h2><span class="label">Rivian fulfillment record</span></div>
+      <div class="kv" id="transportKv"></div>
+    </div>
     <div class="card" id="buildCard" hidden>
       <div class="head"><h2>Build dates</h2><span class="label">From Rivian's vehicle record</span></div>
       <div class="kv" id="buildDates"></div>
@@ -373,6 +382,41 @@
       const on = !(val === null || val === undefined || val === false || val === "");
       return `<div class="wrow"><div><div class="wf">${esc(label)}</div><div class="we">Next: ${esc(expect)}</div><span class="raw">${esc(field)}</span></div><div><div class="wn ${on ? 'on' : 'off'}">${esc(on ? friendlyVal(val) : (offText || "Not yet"))}</div><span class="raw">${esc(mono(val))}</span></div></div>`;
     }).join("");
+
+    // Vehicle telemetry (appears once Rivian creates the vehicle record)
+    const t = latest.telemetry || {};
+    if (t.lastSync || t.mileage != null || t.battery != null) {
+      const miles = t.mileage == null ? null : (Number(t.mileage) > 2000 ? Math.round(Number(t.mileage) / 1609.344) : Math.round(Number(t.mileage)));
+      const rows = [
+        ["Last connected", t.lastSync ? fmtDT(t.lastSync) : null],
+        ["Odometer", miles != null ? `${miles} mi` : null],
+        ["Battery", t.battery != null ? `${Math.round(Number(t.battery))}%` : null],
+        ["Power", t.powerState ? human(t.powerState) : null],
+        ["Charging", t.chargerState ? human(t.chargerState) : null],
+        ["Software", t.otaVersion || null],
+        ["Location", t.locationKnown ? "Known (in your push alerts)" : "Not reported"],
+      ].filter(([, v]) => v);
+      $("carCard").hidden = false;
+      $("carKv").innerHTML = rows.map(([k, v]) => `<span class="k">${esc(k)}</span><span>${esc(v)}</span>`).join("");
+    }
+
+    // Transport / fulfillment records
+    const fulf = (latest.fulfillments || []);
+    if (fulf.length || (latest.itemStates && Object.keys(latest.itemStates).length)) {
+      const rows = [];
+      fulf.forEach((f, i) => {
+        const tag = fulf.length > 1 ? ` ${i + 1}` : "";
+        if (f.status) rows.push([`Fulfillment${tag}`, human(f.status)]);
+        if (f.method || f.vendor) rows.push([`Method${tag}`, [human(f.method), f.vendor].filter(Boolean).join(" · ")]);
+        if (f.trackingStatus || f.trackingCarrier) rows.push([`Shipment${tag}`, [human(f.trackingStatus), f.trackingCarrier].filter(Boolean).join(" · ")]);
+        if (f.shipDate) rows.push([`Shipped${tag}`, fmtD(f.shipDate)]);
+        if (f.deliveredDate) rows.push([`Delivered${tag}`, fmtD(f.deliveredDate)]);
+        if (f.windowStart || f.windowEnd) rows.push([`Estimated window${tag}`, [f.windowStart, f.windowEnd].filter(Boolean).map(d => fmtD(d + (d.length === 10 ? "T12:00:00" : ""))).join(" to ")]);
+      });
+      Object.entries(latest.itemStates || {}).forEach(([sku, st]) => { if (st) rows.push([`${sku === "R2" ? "Vehicle" : sku} item`, human(st)]); });
+      if (latest.pendingFulfillmentItems) rows.push(["Awaiting fulfillment", `${latest.pendingFulfillmentItems} item${latest.pendingFulfillmentItems === 1 ? "" : "s"}`]);
+      if (rows.length) { $("transportCard").hidden = false; $("transportKv").innerHTML = rows.map(([k, v]) => `<span class="k">${esc(k)}</span><span>${esc(v)}</span>`).join(""); }
+    }
 
     // Build dates
     const bd = latest.buildDates || {};

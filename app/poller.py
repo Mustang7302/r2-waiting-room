@@ -28,7 +28,7 @@ from .sanitize import assert_clean, public_changes, public_snapshot
 
 log = logging.getLogger("r2wr")
 
-ENDPOINTS = ["vehicleOrders", "order", "transactionStatus", "delivery", "userInfo"]
+ENDPOINTS = ["vehicleOrders", "order", "transactionStatus", "delivery", "userInfo", "orderFulfillment", "vehicleState"]
 
 
 def fetch_live(order_id_override: str | None) -> tuple[dict[str, Any], dict[str, str]]:
@@ -50,12 +50,14 @@ def fetch_live(order_id_override: str | None) -> tuple[dict[str, Any], dict[str,
         raw.update(order={}, transactionStatus={}, delivery=None, userInfo={})
         return raw, errors
 
-    for name, call in (
+    calls = [
         ("order", lambda: client.order(order_id)),
         ("transactionStatus", lambda: client.transaction_status(order_id)),
         ("delivery", lambda: client.delivery(order_id)),
         ("userInfo", lambda: client.user_info()),
-    ):
+        ("orderFulfillment", lambda: client.order_fulfillment(order_id)),
+    ]
+    for name, call in calls:
         try:
             result = call()
             if isinstance(result, tuple):
@@ -68,6 +70,21 @@ def fetch_live(order_id_override: str | None) -> tuple[dict[str, Any], dict[str,
         except (RivianError, KeyError, TypeError) as e:
             errors[name] = str(e)
             raw[name] = None
+    # Vehicle telemetry exists only once Rivian has created a vehicle record (VIN assigned).
+    vehicles = [v for v in ((raw.get("userInfo") or {}).get("vehicles") or []) if isinstance(v, dict) and v.get("id")]
+    if vehicles:
+        try:
+            result, note = client.vehicle_state(vehicles[0]["id"])
+            if note:
+                errors["vehicleState.note"] = note
+            raw["vehicleState"] = result
+        except RivianAuthError:
+            raise
+        except (RivianError, KeyError, TypeError) as e:
+            errors["vehicleState"] = str(e)
+            raw["vehicleState"] = None
+    else:
+        raw["vehicleState"] = None
     if isinstance(raw.get("order"), dict) and "id" not in raw["order"]:
         raw["order"]["id"] = order_id
     return raw, errors
@@ -164,7 +181,8 @@ def run(mock: bool, fixture: str, notify: bool = True) -> int:
         when = _local_time(now)
         if pub_changes or newly:
             headline, body, priority = format_changes(pub_changes, rung_now, newly, RUNG_NAMES)
-            send(headline, f"{when}\n{body}", priority=priority, tags="truck" if newly else "")
+            car = _car_line(facts)
+            send(headline, f"{when}\n{body}" + (f"\n{car}" if car else ""), priority=priority, tags="truck" if newly else "")
         elif cfg.get("heartbeat", True):
             stage = RUNG_NAMES.get(rung_now, "?")
             since = meta["stage_since"]
@@ -172,11 +190,34 @@ def run(mock: bool, fixture: str, notify: bool = True) -> int:
             parts = [f"Rung {rung_now} of {len(RUNG_NAMES)}: {stage}" + (f", {days} d at this stage" if days is not None else "")]
             if meta["next_scheduled"]:
                 parts.append(f"{meta['next_scheduled']['label']} {meta['next_scheduled']['date']}")
+            car = _car_line(facts)
+            if car:
+                parts.append(car)
             parts.append(f"{meta['fields_watched']} fields compared, no change")
             if errors and any(not k.endswith(".note") for k in errors):
                 parts.append("one Rivian service did not answer")
             send("Checked, no change", f"{when}\n" + " · ".join(parts), priority="low", tags="white_check_mark")
     return 0
+
+
+def _car_line(facts: dict) -> str | None:
+    """Telemetry summary for the owner's private push. Includes location; the public dashboard never does."""
+    t = facts.get("telemetry") or {}
+    if not t.get("lastSync") and t.get("mileage") is None:
+        return None
+    bits = []
+    if t.get("mileage") is not None:
+        bits.append(f"{round(float(t['mileage']) / 1609.344) if float(t['mileage']) > 2000 else round(float(t['mileage']))} mi")
+    if t.get("battery") is not None:
+        bits.append(f"{round(float(t['battery']))}%")
+    if t.get("powerState"):
+        bits.append(str(t["powerState"]).lower())
+    loc = t.get("location") or {}
+    if loc.get("latitude") is not None:
+        bits.append(f"at {float(loc['latitude']):.4f},{float(loc['longitude']):.4f}")
+    if t.get("lastSync"):
+        bits.append(f"last seen {_local_time(str(t['lastSync']))}")
+    return "Car: " + ", ".join(bits)
 
 
 def _local_time(iso: str) -> str:

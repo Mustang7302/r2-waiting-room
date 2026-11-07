@@ -171,6 +171,14 @@ class RivianClient:
         data = self._post(Q.GATEWAY, Q.USER_INFO, self._headers())
         return data["currentUser"]
 
+    def vehicle_state(self, vehicle_id: str) -> tuple[dict, str | None]:
+        data, note = self._post_adaptive(Q.GATEWAY, Q.VEHICLE_STATE, {"vehicleID": vehicle_id}, self._headers())
+        return data["vehicleState"], note
+
+    def order_fulfillment(self, order_id: str) -> tuple[dict, str | None]:
+        data, note = self._post_adaptive(Q.ORDERS, Q.ORDER_FULFILLMENT, {"orderId": order_id}, self._headers(t2d=True))
+        return data["order"], note
+
     # ----- plumbing ---------------------------------------------------------
 
     def _headers(self, auth: bool = True, t2d: bool = False) -> dict:

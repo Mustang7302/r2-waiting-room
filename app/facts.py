@@ -56,6 +56,8 @@ def build_facts(raw: dict[str, Any]) -> dict[str, Any]:
     tx: dict = raw.get("transactionStatus") or {}
     delivery: dict = raw.get("delivery") or {}
     user: dict = raw.get("userInfo") or {}
+    vs: dict = raw.get("vehicleState") or {}
+    of: dict = raw.get("orderFulfillment") or {}
 
     cs = order.get("consumerStatuses") or {}
     veh_item = _vehicle_item(order)
@@ -130,6 +132,38 @@ def build_facts(raw: dict[str, Any]) -> dict[str, Any]:
             "packages": [options[g] for g in ("LPKG", "TOW", "AUTO") if options.get(g)],
             "configVersion": cfg.get("version"),
         },
+        "telemetry": {
+            "lastSync": _g(vs, "cloudConnection", "lastSync"),
+            "mileage": _g(vs, "vehicleMileage", "value"),
+            "battery": _g(vs, "batteryLevel", "value"),
+            "distanceToEmpty": _g(vs, "distanceToEmpty", "value"),
+            "powerState": _g(vs, "powerState", "value"),
+            "gear": _g(vs, "gearStatus", "value"),
+            "chargerState": _g(vs, "chargerState", "value"),
+            "speed": _g(vs, "gnssSpeed", "value"),
+            "otaVersion": _g(vs, "otaCurrentVersion", "value"),
+            "otaStatus": _g(vs, "otaStatus", "value"),
+            "location": {"latitude": _g(vs, "gnssLocation", "latitude"), "longitude": _g(vs, "gnssLocation", "longitude"),
+                         "timeStamp": _g(vs, "gnssLocation", "timeStamp")} if vs.get("gnssLocation") else None,
+        },
+        "fulfillments": [
+            {
+                "status": f.get("fulfillmentStatus"),
+                "method": f.get("fulfillmentMethod"),
+                "vendor": f.get("fulfillmentVendor"),
+                "trackingStatus": _g(f, "tracking", "status"),
+                "trackingCarrier": _g(f, "tracking", "carrier"),
+                "shipDate": _g(f, "tracking", "shipDate"),
+                "deliveredDate": _g(f, "tracking", "deliveredDate"),
+                "serviceType": _g(f, "tracking", "serviceType"),
+                "windowStart": _g(f, "estimatedDeliveryWindow", "startDate"),
+                "windowEnd": _g(f, "estimatedDeliveryWindow", "endDate"),
+                "items": [i.get("orderItemId") for i in (f.get("items") or []) if isinstance(i, dict)],
+            }
+            for f in (_g(of, "fulfillmentInfo", "fulfillments") or []) if isinstance(f, dict)
+        ],
+        "pendingFulfillmentItems": len(_g(of, "fulfillmentInfo", "pendingFulfillmentItems") or []),
+        "itemStates": {it.get("sku"): it.get("state") for it in (of.get("items") or []) if isinstance(it, dict) and it.get("sku")},
         "buildDates": {
             "expectedBuildDate": (user_vehicle or {}).get("expectedBuildDate"),
             "plannedBuildDate": (user_vehicle or {}).get("plannedBuildDate"),

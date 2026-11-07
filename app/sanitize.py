@@ -35,6 +35,12 @@ ALLOWED_PATHS = [
     r"^userInfo\.vehicles\[[^\]]+\]\.(state|vin|roles\[\d+\])$",
     r"^userInfo\.vehicles\[[^\]]+\]\.vehicle\.(vin|modelYear|make|model|expectedBuildDate|plannedBuildDate|expectedGeneralAssemblyStartDate|actualGeneralAssemblyDate|otaEarlyAccessStatus)$",
     r"^userInfo\.vehicles\[[^\]]+\]\.vehicle\.mobileConfiguration\.[A-Za-z]+\.(optionId|optionName)$",
+    r"^vehicleState\.(cloudConnection\.lastSync|powerState\.value|gearStatus\.value|vehicleMileage\.value|batteryLevel\.value|distanceToEmpty\.value|chargerStatus\.value|chargerState\.value|batteryLimit\.value|otaCurrentVersion\.value|otaAvailableVersion\.value|otaStatus\.value)$",
+    r"^orderFulfillment\.(state|fulfillmentSummaryStatus)$",
+    r"^orderFulfillment\.items\[[^\]]+\]\.(state|sku|type)$",
+    r"^orderFulfillment\.fulfillmentInfo\.fulfillments\[[^\]]+\]\.(fulfillmentStatus|fulfillmentMethod|fulfillmentVendor)$",
+    r"^orderFulfillment\.fulfillmentInfo\.fulfillments\[[^\]]+\]\.tracking\.(status|carrier|shipDate|deliveredDate|serviceType)$",
+    r"^orderFulfillment\.fulfillmentInfo\.fulfillments\[[^\]]+\]\.estimatedDeliveryWindow\.(startDate|endDate)$",
 ]
 _ALLOWED = [re.compile(p) for p in ALLOWED_PATHS]
 
@@ -128,6 +134,10 @@ def public_snapshot(facts: dict, full_vin: bool = False) -> dict[str, Any]:
         "delivery": facts.get("delivery"),
         "vehicle": facts.get("vehicle"),
         "buildDates": facts.get("buildDates"),
+        "telemetry": {k: v for k, v in (facts.get("telemetry") or {}).items() if k != "location"} | {"locationKnown": bool((facts.get("telemetry") or {}).get("location"))},
+        "fulfillments": [{k: v for k, v in f.items() if k != "items"} for f in (facts.get("fulfillments") or [])],
+        "pendingFulfillmentItems": facts.get("pendingFulfillmentItems"),
+        "itemStates": facts.get("itemStates"),
     }
 
 

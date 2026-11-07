@@ -152,3 +152,29 @@ USER_INFO = {
     ),
     "variables": {},
 }
+
+
+# Asked once a vehicle record exists (after VIN assignment). Pre-delivery these may be partial or empty.
+VEHICLE_STATE = {
+    "operationName": "GetVehicleState",
+    "query": (
+        "query GetVehicleState($vehicleID: String!) { vehicleState(id: $vehicleID) { "
+        "cloudConnection { lastSync } powerState { value } gearStatus { value } vehicleMileage { value } "
+        "batteryLevel { value } distanceToEmpty { value } gnssLocation { latitude longitude timeStamp } gnssSpeed { value } "
+        "chargerStatus { value } chargerState { value } batteryLimit { value } otaCurrentVersion { value } "
+        "otaAvailableVersion { value } otaStatus { value } } }"
+    ),
+}
+
+# Order fulfillment and shipment tracking on the orders endpoint (the-mace's getOrder selection).
+ORDER_FULFILLMENT = {
+    "operationName": "getOrder",
+    "query": (
+        "query getOrder($orderId: String!) { order(id: $orderId) { id state fulfillmentSummaryStatus "
+        "items { id title type sku quantity state } "
+        "fulfillmentInfo { fulfillments { fulfillmentId fulfillmentStatus fulfillmentMethod fulfillmentVendor "
+        "tracking { status carrier number url shipDate deliveredDate serviceType } "
+        "estimatedDeliveryWindow { startDate endDate } items { orderItemId quantityFulfilled isPartialFulfillment } } "
+        "pendingFulfillmentItems { orderItemId quantity } } } }"
+    ),
+}
