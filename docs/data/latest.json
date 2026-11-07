@@ -14,7 +14,7 @@
   "vehicleId": "set",
   "vin": "7PD2EAAB9VN019•••",
   "isPreparingPurchase": null,
-  "isConsumerFlowComplete": false,
+  "isConsumerFlowComplete": true,
   "steps": [],
   "delivery": {
     "status": "APPT_SCHEDULED",
