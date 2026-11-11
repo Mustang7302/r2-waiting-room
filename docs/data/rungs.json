@@ -69,15 +69,15 @@
     "reached": true,
     "reached_at": "2026-11-01T14:46:50Z",
     "source": "poll",
-    "value": "APPT_SCHEDULED"
+    "value": "DELIVERY_ACCEPTED"
   },
   {
     "rung": 9,
     "name": "Delivered",
     "field": "fulfillmentSummaryStatus",
-    "reached": false,
-    "reached_at": null,
-    "source": null,
-    "value": null
+    "reached": true,
+    "reached_at": "2026-11-11T22:26:15Z",
+    "source": "poll",
+    "value": "VEHICLE_DELIVERED"
   }
 ]

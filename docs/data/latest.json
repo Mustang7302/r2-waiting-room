@@ -2,7 +2,7 @@
   "orderIdLast4": "0332",
   "state": "ORDERED",
   "configurationStatus": "SOFT_LOCKED",
-  "fulfillmentSummaryStatus": "READY_FOR_FULFILLMENT",
+  "fulfillmentSummaryStatus": "VEHICLE_DELIVERED",
   "orderConfirmationType": "SELF_SERVE_LOCK",
   "invitedToSelfConfirm": null,
   "invitedToSelfConfigure": false,
@@ -17,7 +17,7 @@
   "isConsumerFlowComplete": true,
   "steps": [],
   "delivery": {
-    "status": "APPT_SCHEDULED",
+    "status": "DELIVERY_ACCEPTED",
     "carrier": "RIVIAN",
     "appointmentStart": "2026-11-11T11:00:00",
     "appointmentEnd": "2026-11-11T11:30:00",
@@ -40,52 +40,64 @@
     "configVersion": "R2C_2.4"
   },
   "buildDates": {
-    "expectedBuildDate": null,
-    "plannedBuildDate": null,
-    "expectedGeneralAssemblyStartDate": null,
-    "actualGeneralAssemblyDate": null
+    "expectedBuildDate": "2026-10-03",
+    "plannedBuildDate": "2026-10-29",
+    "expectedGeneralAssemblyStartDate": "2026-10-29",
+    "actualGeneralAssemblyDate": "2026-10-29"
   },
   "telemetry": {
-    "lastSync": null,
-    "mileage": null,
-    "battery": null,
-    "distanceToEmpty": null,
+    "lastSync": "2026-11-11T22:24:29.407Z",
+    "mileage": 230000,
+    "battery": 47.400001525878906,
+    "distanceToEmpty": 214,
     "powerState": null,
     "gear": null,
-    "chargerState": null,
+    "chargerState": "charging_ready",
     "speed": null,
-    "otaVersion": null,
+    "otaVersion": "2026.36.42",
     "otaStatus": null,
-    "locationKnown": false
+    "locationKnown": true
   },
   "fulfillments": [
     {
-      "status": "RESERVED",
+      "status": "FULFILLED",
       "method": "THROW_IN",
       "vendor": "RIVIAN",
-      "trackingStatus": null,
-      "trackingCarrier": null,
+      "trackingStatus": "DELIVERED",
+      "trackingCarrier": "",
       "shipDate": null,
-      "deliveredDate": null,
-      "serviceType": null,
+      "deliveredDate": "2026-11-11T16:05:18.795969",
+      "serviceType": "",
       "windowStart": null,
       "windowEnd": null
     },
     {
-      "status": "RESERVED",
+      "status": "FULFILLED",
       "method": "THROW_IN",
       "vendor": "RIVIAN",
-      "trackingStatus": null,
-      "trackingCarrier": null,
+      "trackingStatus": "DELIVERED",
+      "trackingCarrier": "",
       "shipDate": null,
-      "deliveredDate": null,
-      "serviceType": null,
+      "deliveredDate": "2026-11-11T16:05:19.231636",
+      "serviceType": "",
       "windowStart": null,
       "windowEnd": null
     },
     {
-      "status": "RESERVED",
+      "status": "FULFILLED",
       "method": "THROW_IN",
+      "vendor": "RIVIAN",
+      "trackingStatus": "DELIVERED",
+      "trackingCarrier": "",
+      "shipDate": null,
+      "deliveredDate": "2026-11-11T16:05:19.629273",
+      "serviceType": "",
+      "windowStart": null,
+      "windowEnd": null
+    },
+    {
+      "status": "FULFILLED",
+      "method": "TO_BE_DETERMINED",
       "vendor": "RIVIAN",
       "trackingStatus": null,
       "trackingCarrier": null,
@@ -96,7 +108,7 @@
       "windowEnd": null
     }
   ],
-  "pendingFulfillmentItems": 1,
+  "pendingFulfillmentItems": 0,
   "itemStates": {
     "PROCSHQ0DS": null,
     "PROCCTG7CO": null,

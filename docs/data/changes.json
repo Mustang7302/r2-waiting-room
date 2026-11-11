@@ -1,5 +1,327 @@
 [
   {
+    "path": "delivery.status",
+    "old": "APPT_SCHEDULED",
+    "new": "DELIVERY_ACCEPTED",
+    "kind": "changed",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "order.fulfillmentSummaryStatus",
+    "old": "READY_FOR_FULFILLMENT",
+    "new": "VEHICLE_DELIVERED",
+    "kind": "changed",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "orderFulfillment.fulfillmentInfo.fulfillments[#5f1608].fulfillmentStatus",
+    "old": "RESERVED",
+    "new": "FULFILLED",
+    "kind": "changed",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "orderFulfillment.fulfillmentInfo.fulfillments[#5f1608].tracking.carrier",
+    "old": null,
+    "new": "",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "orderFulfillment.fulfillmentInfo.fulfillments[#5f1608].tracking.deliveredDate",
+    "old": null,
+    "new": "2026-11-11T16:05:18.795969",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "orderFulfillment.fulfillmentInfo.fulfillments[#5f1608].tracking.serviceType",
+    "old": null,
+    "new": "",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "orderFulfillment.fulfillmentInfo.fulfillments[#5f1608].tracking.status",
+    "old": null,
+    "new": "DELIVERED",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "orderFulfillment.fulfillmentInfo.fulfillments[#b80be5].fulfillmentMethod",
+    "old": null,
+    "new": "TO_BE_DETERMINED",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "orderFulfillment.fulfillmentInfo.fulfillments[#b80be5].fulfillmentStatus",
+    "old": null,
+    "new": "FULFILLED",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "orderFulfillment.fulfillmentInfo.fulfillments[#b80be5].fulfillmentVendor",
+    "old": null,
+    "new": "RIVIAN",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "orderFulfillment.fulfillmentInfo.fulfillments[#01471a].fulfillmentStatus",
+    "old": "RESERVED",
+    "new": "FULFILLED",
+    "kind": "changed",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "orderFulfillment.fulfillmentInfo.fulfillments[#01471a].tracking.carrier",
+    "old": null,
+    "new": "",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "orderFulfillment.fulfillmentInfo.fulfillments[#01471a].tracking.deliveredDate",
+    "old": null,
+    "new": "2026-11-11T16:05:19.629273",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "orderFulfillment.fulfillmentInfo.fulfillments[#01471a].tracking.serviceType",
+    "old": null,
+    "new": "",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "orderFulfillment.fulfillmentInfo.fulfillments[#01471a].tracking.status",
+    "old": null,
+    "new": "DELIVERED",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "orderFulfillment.fulfillmentInfo.fulfillments[#cd8ca7].fulfillmentStatus",
+    "old": "RESERVED",
+    "new": "FULFILLED",
+    "kind": "changed",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "orderFulfillment.fulfillmentInfo.fulfillments[#cd8ca7].tracking.carrier",
+    "old": null,
+    "new": "",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "orderFulfillment.fulfillmentInfo.fulfillments[#cd8ca7].tracking.deliveredDate",
+    "old": null,
+    "new": "2026-11-11T16:05:19.231636",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "orderFulfillment.fulfillmentInfo.fulfillments[#cd8ca7].tracking.serviceType",
+    "old": null,
+    "new": "",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "orderFulfillment.fulfillmentInfo.fulfillments[#cd8ca7].tracking.status",
+    "old": null,
+    "new": "DELIVERED",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "orderFulfillment.fulfillmentSummaryStatus",
+    "old": "READY_FOR_FULFILLMENT",
+    "new": "VEHICLE_DELIVERED",
+    "kind": "changed",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "userInfo.vehicles[#ea5e14].roles[0]",
+    "old": null,
+    "new": "primary-owner",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "userInfo.vehicles[#ea5e14].vehicle.actualGeneralAssemblyDate",
+    "old": null,
+    "new": "2026-10-29",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "userInfo.vehicles[#ea5e14].vehicle.expectedBuildDate",
+    "old": null,
+    "new": "2026-10-03",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "userInfo.vehicles[#ea5e14].vehicle.expectedGeneralAssemblyStartDate",
+    "old": null,
+    "new": "2026-10-29",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "userInfo.vehicles[#ea5e14].vehicle.make",
+    "old": null,
+    "new": "RIVIAN",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "userInfo.vehicles[#ea5e14].vehicle.mobileConfiguration.exteriorColorOption.optionId",
+    "old": null,
+    "new": "EXP-FGR",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "userInfo.vehicles[#ea5e14].vehicle.mobileConfiguration.exteriorColorOption.optionName",
+    "old": null,
+    "new": "Forest Green",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "userInfo.vehicles[#ea5e14].vehicle.mobileConfiguration.interiorColorOption.optionId",
+    "old": null,
+    "new": "INT-PCC",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "userInfo.vehicles[#ea5e14].vehicle.mobileConfiguration.interiorColorOption.optionName",
+    "old": null,
+    "new": "Coastal Cloud Signature",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "userInfo.vehicles[#ea5e14].vehicle.mobileConfiguration.trimOption.optionId",
+    "old": null,
+    "new": "BLD-PRF2",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "userInfo.vehicles[#ea5e14].vehicle.mobileConfiguration.trimOption.optionName",
+    "old": null,
+    "new": "R2 Performance",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "userInfo.vehicles[#ea5e14].vehicle.model",
+    "old": null,
+    "new": "R2",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "userInfo.vehicles[#ea5e14].vehicle.modelYear",
+    "old": null,
+    "new": 2027,
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "userInfo.vehicles[#ea5e14].vehicle.otaEarlyAccessStatus",
+    "old": null,
+    "new": false,
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "userInfo.vehicles[#ea5e14].vehicle.plannedBuildDate",
+    "old": null,
+    "new": "2026-10-29",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "userInfo.vehicles[#ea5e14].vehicle.vin",
+    "old": null,
+    "new": "7PD2EAAB9VN019•••",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "userInfo.vehicles[#ea5e14].vin",
+    "old": null,
+    "new": "7PD2EAAB9VN019•••",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "vehicleOrders[0].fulfillmentSummaryStatus",
+    "old": "READY_FOR_FULFILLMENT",
+    "new": "VEHICLE_DELIVERED",
+    "kind": "changed",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "vehicleState.batteryLevel.value",
+    "old": null,
+    "new": 47.400001525878906,
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "vehicleState.batteryLimit.value",
+    "old": null,
+    "new": 85,
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "vehicleState.chargerState.value",
+    "old": null,
+    "new": "charging_ready",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "vehicleState.cloudConnection.lastSync",
+    "old": null,
+    "new": "2026-11-11T22:24:29.407Z",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "vehicleState.distanceToEmpty.value",
+    "old": null,
+    "new": 214,
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "vehicleState.otaCurrentVersion.value",
+    "old": null,
+    "new": "2026.36.42",
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
+    "path": "vehicleState.vehicleMileage.value",
+    "old": null,
+    "new": 230000,
+    "kind": "added",
+    "seen_at": "2026-11-11T22:26:15Z"
+  },
+  {
     "path": "orderFulfillment.fulfillmentInfo.fulfillments[#5f1608].fulfillmentMethod",
     "old": null,
     "new": "THROW_IN",
