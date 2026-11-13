@@ -46,10 +46,10 @@
     "actualGeneralAssemblyDate": "2026-10-29"
   },
   "telemetry": {
-    "lastSync": "2026-11-12T13:20:38.094Z",
-    "mileage": 283000,
-    "battery": 69.20000457763672,
-    "distanceToEmpty": 345,
+    "lastSync": "2026-11-12T23:36:08.626Z",
+    "mileage": 333000,
+    "battery": 56.29999923706055,
+    "distanceToEmpty": 278,
     "powerState": null,
     "gear": null,
     "chargerState": "charging_ready",
