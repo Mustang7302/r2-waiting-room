@@ -1,6 +1,34 @@
 [
   {
     "path": "vehicleState.batteryLevel.value",
+    "old": 56.29999923706055,
+    "new": 47.60000228881836,
+    "kind": "changed",
+    "seen_at": "2026-11-13T11:47:58Z"
+  },
+  {
+    "path": "vehicleState.cloudConnection.lastSync",
+    "old": "2026-11-12T23:36:08.626Z",
+    "new": "2026-11-13T05:28:21.042Z",
+    "kind": "changed",
+    "seen_at": "2026-11-13T11:47:58Z"
+  },
+  {
+    "path": "vehicleState.distanceToEmpty.value",
+    "old": 278,
+    "new": 235,
+    "kind": "changed",
+    "seen_at": "2026-11-13T11:47:58Z"
+  },
+  {
+    "path": "vehicleState.vehicleMileage.value",
+    "old": 333000,
+    "new": 359000,
+    "kind": "changed",
+    "seen_at": "2026-11-13T11:47:58Z"
+  },
+  {
+    "path": "vehicleState.batteryLevel.value",
     "old": 69.20000457763672,
     "new": 56.29999923706055,
     "kind": "changed",
